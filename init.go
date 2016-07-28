@@ -21,7 +21,19 @@ func initSq120To64() {
 	}
 }
 
+func initBitMasks() {
+	for index := 0; index < 64; index++ {
+		SetMask[index] = U64(0)
+		ClearMask[index] = U64(0)
+	}
+	for index := 0; index < 64; index++ {
+		SetMask[index] |= (U64(1) << U64(index))
+		ClearMask[index] = ^(SetMask[index])
+	}
+}
+
 // AllInit is used to initialize 120 and 64 square arrays
 func AllInit() {
 	initSq120To64()
+	initBitMasks()
 }

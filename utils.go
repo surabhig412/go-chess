@@ -39,3 +39,15 @@ func CountBits(n U64) int {
 	bs := strconv.FormatUint(uint64(n), 2)
 	return strings.Count(bs, "1")
 }
+
+// ClrBit clears the bit of a sq
+func ClrBit(bit U64, sq int) U64 {
+	bit &= ClearMask[sq]
+	return bit
+}
+
+// SetBit sets the bit of a sq
+func SetBit(bit U64, sq int) U64 {
+	bit |= SetMask[sq]
+	return bit
+}
