@@ -2,8 +2,10 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
 	"strconv"
 	"strings"
+	"time"
 )
 
 // FR2SQ is used to represent file rank to a particular square in 120-sq board
@@ -50,4 +52,10 @@ func ClrBit(bit U64, sq int) U64 {
 func SetBit(bit U64, sq int) U64 {
 	bit |= SetMask[sq]
 	return bit
+}
+
+// Rand64 creates a random 64 bit uint value
+func Rand64() U64 {
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	return (U64(r.Int63()) + U64((0|1)<<63))
 }
