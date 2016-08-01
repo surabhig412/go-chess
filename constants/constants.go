@@ -1,4 +1,4 @@
-package main
+package constants
 
 // U64 is declared datatype
 type U64 uint64
@@ -33,18 +33,18 @@ var CastleKeys [16]U64
 // Possible values for pieces
 const (
 	Empty int = iota
-	wP
-	wN
-	wB
-	wR
-	wQ
-	wK
-	bP
-	bN
-	bB
-	bR
-	bQ
-	bK
+	Wp
+	Wn
+	Wb
+	Wr
+	Wq
+	Wk
+	Bp
+	Bn
+	Bb
+	Br
+	Bq
+	Bk
 )
 
 // Columns A-H
@@ -156,9 +156,10 @@ const (
 	Offboard = 100
 )
 
+// Wkca represents White king castling, rest have similar connotations
 const (
-	wkca = 1
-	wqca = 2
-	bkca = 4
-	bqca = 8
+	Wkca = 1
+	Wqca = 2
+	Bkca = 4
+	Bqca = 8
 )

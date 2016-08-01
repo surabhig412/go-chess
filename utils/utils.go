@@ -1,7 +1,7 @@
-package main
+package utils
 
 import (
-	"fmt"
+	"go-chess/constants"
 	"math/rand"
 	"strconv"
 	"strings"
@@ -15,7 +15,7 @@ func FR2SQ(f, r int) int {
 
 // SQ64 returns 64-square equivalent of 120-square board
 func SQ64(sq120 int) int {
-	return Sq120ToSq64[sq120]
+	return constants.Sq120ToSq64[sq120]
 }
 
 func reverse(s string) (result string) {
@@ -26,36 +26,35 @@ func reverse(s string) (result string) {
 }
 
 // PopBit returns position of first pawn from MSB side
-func PopBit(n U64) (int, U64) {
-	bs := strconv.FormatUint(uint64(n), 2)
+func PopBit(n *constants.U64) int {
+	bs := strconv.FormatUint(uint64(*n), 2)
 	rev := reverse(bs)
 	i := strings.Index(rev, "1")
-	fmt.Println("Index: ", i)
-	mask := ^(U64(1) << U64(i))
-	n &= mask
-	return i, n
+	mask := ^(constants.U64(1) << constants.U64(i))
+	*n &= mask
+	return i
 }
 
 // CountBits counts number of pawns on the board
-func CountBits(n U64) int {
+func CountBits(n constants.U64) int {
 	bs := strconv.FormatUint(uint64(n), 2)
 	return strings.Count(bs, "1")
 }
 
 // ClrBit clears the bit of a sq
-func ClrBit(bit U64, sq int) U64 {
-	bit &= ClearMask[sq]
+func ClrBit(bit constants.U64, sq int) constants.U64 {
+	bit &= constants.ClearMask[sq]
 	return bit
 }
 
 // SetBit sets the bit of a sq
-func SetBit(bit U64, sq int) U64 {
-	bit |= SetMask[sq]
+func SetBit(bit constants.U64, sq int) constants.U64 {
+	bit |= constants.SetMask[sq]
 	return bit
 }
 
 // Rand64 creates a random 64 bit uint value
-func Rand64() U64 {
+func Rand64() constants.U64 {
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	return (U64(r.Int63()) + U64((0|1)<<63))
+	return (constants.U64(r.Int63()) + constants.U64((0|1)<<63))
 }
