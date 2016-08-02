@@ -30,11 +30,11 @@ func initSq120To64() {
 // initBitMasks initializes SetMask and ClearMask arrays
 func initBitMasks() {
 	for index := 0; index < 64; index++ {
-		constants.SetMask[index] = constants.U64(0)
-		constants.ClearMask[index] = constants.U64(0)
+		constants.SetMask[index] = uint64(0)
+		constants.ClearMask[index] = uint64(0)
 	}
 	for index := 0; index < 64; index++ {
-		constants.SetMask[index] |= (constants.U64(1) << constants.U64(index))
+		constants.SetMask[index] |= (uint64(1) << uint64(index))
 		constants.ClearMask[index] = ^(constants.SetMask[index])
 	}
 }

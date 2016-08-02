@@ -18,7 +18,7 @@ func ResetBoard(pos *models.SBoard) {
 		pos.BigPce[index] = 0
 		pos.MajPce[index] = 0
 		pos.MinPce[index] = 0
-		pos.Pawns[index] = constants.U64(0)
+		pos.Pawns[index] = uint64(0)
 	}
 	for index := 0; index < 13; index++ {
 		pos.PceNum[index] = 0
@@ -31,5 +31,5 @@ func ResetBoard(pos *models.SBoard) {
 	pos.Ply = 0
 	pos.HisPly = 0
 	pos.CastlePerm = 0
-	pos.PosKey = constants.U64(0)
+	pos.PosKey = uint64(0)
 }

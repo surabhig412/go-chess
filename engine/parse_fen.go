@@ -1,6 +1,7 @@
 package engine
 
 import (
+	"errors"
 	"go-chess/constants"
 	"go-chess/models"
 	"go-chess/utils"
@@ -9,9 +10,9 @@ import (
 )
 
 // ParseFEN parses FEN notation
-func ParseFEN(fen string, pos *models.SBoard) int {
+func ParseFEN(fen string, pos *models.SBoard) error {
 	if len(fen) <= 0 || pos == nil {
-		log.Fatalln("FEN or board structure is nil")
+		log.Fatalln("FEN or board structure is invalid")
 	}
 	rank := constants.Rank8
 	file := constants.FileA
@@ -57,12 +58,19 @@ func ParseFEN(fen string, pos *models.SBoard) int {
 			piece = constants.Wq
 			break
 		case "1":
+			fallthrough
 		case "2":
+			fallthrough
 		case "3":
+			fallthrough
 		case "4":
+			fallthrough
 		case "5":
+			fallthrough
 		case "6":
+			fallthrough
 		case "7":
+			fallthrough
 		case "8":
 			piece = constants.Empty
 			count, _ = strconv.Atoi(string(fen[0]))
@@ -76,7 +84,7 @@ func ParseFEN(fen string, pos *models.SBoard) int {
 
 		default:
 			log.Println("Error in parsing FEN")
-			return -1
+			return errors.New("Error in parsing FEN")
 		}
 		for i := 0; i < count; i++ {
 			sq64 := (rank * 8) + file
@@ -88,5 +96,5 @@ func ParseFEN(fen string, pos *models.SBoard) int {
 		}
 		fen = fen[1:len(fen)]
 	}
-	return 0
+	return nil
 }

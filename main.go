@@ -11,8 +11,7 @@ func main() {
 	AllInit()
 
 	var board models.SBoard
-	i := engine.ParseFEN("4KQB", &board)
-	fmt.Println("Parsing successful: ", i)
+	_ = engine.ParseFEN("4KQB1", &board)
 	fmt.Println("Board:")
 	for j := 0; j < 120; j++ {
 		fmt.Printf("%d ", board.Pieces[j])

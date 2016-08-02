@@ -1,8 +1,5 @@
 package constants
 
-// U64 is declared datatype
-type U64 uint64
-
 // Constants for the entire game of chess
 const (
 	BrdSqNum     = 120
@@ -17,19 +14,19 @@ var Sq120ToSq64 [BrdSqNum]int
 var Sq64ToSq120 [64]int
 
 // SetMask sets the bit in 64 sq board
-var SetMask [64]U64
+var SetMask [64]uint64
 
 // ClearMask clears the bit in 64 sq board
-var ClearMask [64]U64
+var ClearMask [64]uint64
 
 // PieceKeys demonstrates a random number of the position of each piece in all squares of the board
-var PieceKeys [13][120]U64
+var PieceKeys [13][120]uint64
 
 // SideKey is a random number for which side is to play
-var SideKey U64
+var SideKey uint64
 
 // CastleKeys represents random number for wK,wQ,bK,bQ side castling
-var CastleKeys [16]U64
+var CastleKeys [16]uint64
 
 // Possible values for pieces
 const (

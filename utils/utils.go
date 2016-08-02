@@ -31,35 +31,35 @@ func reverse(s string) (result string) {
 }
 
 // PopBit returns position of first pawn from MSB side
-func PopBit(n *constants.U64) int {
+func PopBit(n *uint64) int {
 	bs := strconv.FormatUint(uint64(*n), 2)
 	rev := reverse(bs)
 	i := strings.Index(rev, "1")
-	mask := ^(constants.U64(1) << constants.U64(i))
+	mask := ^(uint64(1) << uint64(i))
 	*n &= mask
 	return i
 }
 
 // CountBits counts number of pawns on the board
-func CountBits(n constants.U64) int {
+func CountBits(n uint64) int {
 	bs := strconv.FormatUint(uint64(n), 2)
 	return strings.Count(bs, "1")
 }
 
 // ClrBit clears the bit of a sq
-func ClrBit(bit constants.U64, sq int) constants.U64 {
+func ClrBit(bit uint64, sq int) uint64 {
 	bit &= constants.ClearMask[sq]
 	return bit
 }
 
 // SetBit sets the bit of a sq
-func SetBit(bit constants.U64, sq int) constants.U64 {
+func SetBit(bit uint64, sq int) uint64 {
 	bit |= constants.SetMask[sq]
 	return bit
 }
 
 // Rand64 creates a random 64 bit uint value
-func Rand64() constants.U64 {
+func Rand64() uint64 {
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	return (constants.U64(r.Int63()) + constants.U64((0|1)<<63))
+	return (uint64(r.Int63()) + uint64((0|1)<<63))
 }

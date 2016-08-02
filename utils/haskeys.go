@@ -7,9 +7,9 @@ import (
 )
 
 // GeneratePosKey generates posKey of the board
-func GeneratePosKey(pos *models.SBoard) constants.U64 {
+func GeneratePosKey(pos *models.SBoard) uint64 {
 	piece := constants.Empty
-	var finalKey constants.U64
+	var finalKey uint64
 	for sq := 0; sq < constants.BrdSqNum; sq++ {
 		piece = pos.Pieces[sq]
 		if piece != constants.NoSq && piece != constants.Empty {
