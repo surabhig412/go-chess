@@ -85,73 +85,102 @@ const (
 )
 
 // Integer representation of squares of chess
+// Rank 1
 const (
-	A1       = 21
-	B1       = 22
-	C1       = 23
-	D1       = 24
-	E1       = 25
-	F1       = 26
-	G1       = 27
-	H1       = 28
-	A2       = 31
-	B2       = 32
-	C2       = 33
-	D2       = 34
-	E2       = 35
-	F2       = 36
-	G2       = 37
-	H2       = 38
-	A3       = 41
-	B3       = 42
-	C3       = 43
-	D3       = 44
-	E3       = 45
-	F3       = 46
-	G3       = 47
-	H3       = 48
-	A4       = 51
-	B4       = 52
-	C4       = 53
-	D4       = 54
-	E4       = 55
-	F4       = 56
-	G4       = 57
-	H4       = 58
-	A5       = 61
-	B5       = 62
-	C5       = 63
-	D5       = 64
-	E5       = 65
-	F5       = 66
-	G5       = 67
-	H5       = 68
-	A6       = 71
-	B6       = 72
-	C6       = 73
-	D6       = 74
-	E6       = 75
-	F6       = 76
-	G6       = 77
-	H6       = 78
-	A7       = 81
-	B7       = 82
-	C7       = 83
-	D7       = 84
-	E7       = 85
-	F7       = 86
-	G7       = 87
-	H7       = 88
-	A8       = 91
-	B8       = 92
-	C8       = 93
-	D8       = 94
-	E8       = 95
-	F8       = 96
-	G8       = 97
-	H8       = 98
-	NoSq     = 99
-	Offboard = 100
+	A1 int = iota + 21
+	B1
+	C1
+	D1
+	E1
+	F1
+	G1
+	H1
+)
+
+// Rank 2
+const (
+	A2 int = iota + 31
+	B2
+	C2
+	D2
+	E2
+	F2
+	G2
+	H2
+)
+
+// Rank 3
+const (
+	A3 int = iota + 41
+	B3
+	C3
+	D3
+	E3
+	F3
+	G3
+	H3
+)
+
+// Rank 4
+const (
+	A4 int = iota + 51
+	B4
+	C4
+	D4
+	E4
+	F4
+	G4
+	H4
+)
+
+// Rank 5
+const (
+	A5 int = iota + 61
+	B5
+	C5
+	D5
+	E5
+	F5
+	G5
+	H5
+)
+
+// Rank 6
+const (
+	A6 int = iota + 71
+	B6
+	C6
+	D6
+	E6
+	F6
+	G6
+	H6
+)
+
+// Rank 7
+const (
+	A7 int = iota + 81
+	B7
+	C7
+	D7
+	E7
+	F7
+	G7
+	H7
+)
+
+// Rank 8
+const (
+	A8 int = iota + 91
+	B8
+	C8
+	D8
+	E8
+	F8
+	G8
+	H8
+	NoSq
+	Offboard
 )
 
 // Wkca represents White king castling, rest have similar connotations

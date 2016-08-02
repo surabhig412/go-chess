@@ -13,8 +13,8 @@ func GeneratePosKey(pos *models.SBoard) uint64 {
 	for sq := 0; sq < constants.BrdSqNum; sq++ {
 		piece = pos.Pieces[sq]
 		if piece != constants.NoSq && piece != constants.Empty {
-			if !(piece >= constants.Wp && piece <= constants.Bk) {
-				log.Fatalln("Piece taken is not proper")
+			if piece < constants.Wp || piece > constants.Bk {
+				continue
 			}
 			finalKey ^= constants.PieceKeys[piece][sq]
 		}

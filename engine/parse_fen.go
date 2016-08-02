@@ -2,11 +2,13 @@ package engine
 
 import (
 	"errors"
+	"fmt"
 	"go-chess/constants"
 	"go-chess/models"
 	"go-chess/utils"
 	"log"
 	"strconv"
+	"unicode/utf8"
 )
 
 // ParseFEN parses FEN notation
@@ -18,6 +20,8 @@ func ParseFEN(fen string, pos *models.SBoard) error {
 	file := constants.FileA
 	piece := 0
 	ResetBoard(pos)
+
+	// Parsing position of pieces in FEN notation
 	for (rank >= constants.Rank1) && (len(fen) > 0) {
 		count := 1
 		switch string(fen[0]) {
@@ -76,6 +80,7 @@ func ParseFEN(fen string, pos *models.SBoard) error {
 			count, _ = strconv.Atoi(string(fen[0]))
 			break
 		case "/":
+			fallthrough
 		case " ":
 			rank--
 			file = constants.FileA
@@ -96,5 +101,63 @@ func ParseFEN(fen string, pos *models.SBoard) error {
 		}
 		fen = fen[1:len(fen)]
 	}
+
+	// Parsing side to play in FEN notation
+	if !((string(fen[0]) == "w") || (string(fen[0]) == "b")) {
+		log.Println("Error in parsing FEN")
+		return errors.New("Error in parsing FEN, side should be w or b in FEN notation")
+	}
+	if string(fen[0]) == "w" {
+		pos.Side = constants.White
+	} else {
+		pos.Side = constants.Black
+	}
+	fen = fen[2:len(fen)]
+
+	// Parsing castling in FEN notation
+	for i := 0; i < 4; i++ {
+		if string(fen[0]) == " " {
+			break
+		}
+		switch string(fen[0]) {
+		case "K":
+			pos.CastlePerm |= constants.Wkca
+			break
+		case "Q":
+			pos.CastlePerm |= constants.Wqca
+			break
+		case "k":
+			pos.CastlePerm |= constants.Bkca
+			break
+		case "q":
+			pos.CastlePerm |= constants.Bqca
+			break
+		default:
+			break
+		}
+		fen = fen[1:len(fen)]
+	}
+	fen = fen[1:len(fen)]
+
+	// Parsing enPas in FEN notation
+	if string(fen[0]) != "-" {
+		fileRune, _ := utf8.DecodeRuneInString(string(fen[0]))
+		file = int(fileRune) - 97
+		rankConvert, _ := strconv.Atoi(string(fen[1]))
+		rank = rankConvert - 1
+		if file < constants.FileA || file > constants.FileH {
+			log.Println("Error in parsing enPas in FEN notation")
+			return errors.New("Error in parsing enPas in FEN notation")
+		}
+		if rank < constants.Rank1 || rank > constants.Rank8 {
+			log.Println("Error in parsing enPas in FEN notation")
+			return errors.New("Error in parsing enPas in FEN notation")
+		}
+		pos.EnPas = utils.FR2SQ(file, rank)
+	}
+
+	// Generating PosKey of board structure
+	pos.PosKey = utils.GeneratePosKey(pos)
+	fmt.Println("PosKey: ", pos.PosKey)
 	return nil
 }

@@ -11,7 +11,10 @@ func main() {
 	AllInit()
 
 	var board models.SBoard
-	_ = engine.ParseFEN("4KQB1", &board)
+	err := engine.ParseFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq a4", &board)
+	if err != nil {
+		fmt.Println("Error: ", err)
+	}
 	fmt.Println("Board:")
 	for j := 0; j < 120; j++ {
 		fmt.Printf("%d ", board.Pieces[j])
