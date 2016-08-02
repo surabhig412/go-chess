@@ -7,6 +7,7 @@ type U64 uint64
 const (
 	BrdSqNum     = 120
 	MaxGameMoves = 2048
+	StartFEN     = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 )
 
 // Sq120ToSq64 is used to convert a square in 120 sq board to a square in 64 sq board

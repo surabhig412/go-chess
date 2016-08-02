@@ -18,6 +18,11 @@ func SQ64(sq120 int) int {
 	return constants.Sq120ToSq64[sq120]
 }
 
+// SQ120 returns 120-square equivalent of 64-square board
+func SQ120(sq64 int) int {
+	return constants.Sq64ToSq120[sq64]
+}
+
 func reverse(s string) (result string) {
 	for _, v := range s {
 		result = string(v) + result
