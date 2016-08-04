@@ -3,8 +3,6 @@ package utils
 import (
 	"go-chess/constants"
 	"math/rand"
-	"strconv"
-	"strings"
 	"time"
 )
 
@@ -21,41 +19,6 @@ func SQ64(sq120 int) int {
 // SQ120 returns 120-square equivalent of 64-square board
 func SQ120(sq64 int) int {
 	return constants.Sq64ToSq120[sq64]
-}
-
-func reverse(s string) (result string) {
-	for _, v := range s {
-		result = string(v) + result
-	}
-	return
-}
-
-// PopBit returns position of first pawn from MSB side
-func PopBit(n *uint64) int {
-	bs := strconv.FormatUint(uint64(*n), 2)
-	rev := reverse(bs)
-	i := strings.Index(rev, "1")
-	mask := ^(uint64(1) << uint64(i))
-	*n &= mask
-	return i
-}
-
-// CountBits counts number of pawns on the board
-func CountBits(n uint64) int {
-	bs := strconv.FormatUint(uint64(n), 2)
-	return strings.Count(bs, "1")
-}
-
-// ClrBit clears the bit of a sq
-func ClrBit(bit uint64, sq int) uint64 {
-	bit &= constants.ClearMask[sq]
-	return bit
-}
-
-// SetBit sets the bit of a sq
-func SetBit(bit uint64, sq int) uint64 {
-	bit |= constants.SetMask[sq]
-	return bit
 }
 
 // Rand64 creates a random 64 bit uint value
