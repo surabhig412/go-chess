@@ -24,5 +24,5 @@ func SQ120(sq64 int) int {
 // Rand64 creates a random 64 bit uint value
 func Rand64() uint64 {
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	return (uint64(r.Int63()) + uint64((0|1)<<63))
+	return (uint64(r.Int63()) | uint64((0|1)<<63))
 }

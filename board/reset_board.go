@@ -1,4 +1,4 @@
-package engine
+package board
 
 import (
 	"go-chess/constants"

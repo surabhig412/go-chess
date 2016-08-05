@@ -7,11 +7,11 @@ import (
 	"strings"
 )
 
-// Uint64Utils is the number whose 64 bit positions is to be printed
-type Uint64Utils uint64
+// Bitboard is the number whose 64 bit positions is to be printed
+type Bitboard uint64
 
-// PrintBitBoard is to represent presence of each piece using bitwise operations
-func (bit Uint64Utils) PrintBitBoard() {
+// Print is to represent presence of each piece using bitwise operations
+func (bit Bitboard) Print() {
 	var shiftMe uint64
 	shiftMe = 1
 	fmt.Println()
@@ -39,28 +39,28 @@ func reverse(s string) (result string) {
 	return
 }
 
-// PopBit returns position of first piece from MSB side of a particular pieces' bitboard
-func (bit *Uint64Utils) PopBit() int {
+// Pop returns position of first piece from MSB side of a particular pieces' bitboard
+func (bit *Bitboard) Pop() (i int) {
 	bs := strconv.FormatUint(uint64(*bit), 2)
 	rev := reverse(bs)
-	i := strings.Index(rev, "1")
+	i = strings.Index(rev, "1")
 	mask := ^(uint64(1) << uint64(i))
-	*bit &= Uint64Utils(mask)
-	return i
+	*bit &= Bitboard(mask)
+	return
 }
 
-// CountBits counts number of pieces of a particular piece
-func (bit Uint64Utils) CountBits() int {
+// Count counts number of pieces of a particular piece
+func (bit Bitboard) Count() int {
 	bs := strconv.FormatUint(uint64(bit), 2)
 	return strings.Count(bs, "1")
 }
 
-// ClrBit clears the bit of a sq in a particular pieces' bitboard
-func (bit *Uint64Utils) ClrBit(sq int) {
-	*bit &= Uint64Utils(constants.ClearMask[sq])
+// Clear clears the bit of a sq in a particular pieces' bitboard
+func (bit *Bitboard) Clear(sq int) {
+	*bit &= Bitboard(constants.ClearMask[sq])
 }
 
-// SetBit sets the bit of a sq in a particular pieces' bitboard
-func (bit *Uint64Utils) SetBit(sq int) {
-	*bit |= Uint64Utils(constants.SetMask[sq])
+// Set sets the bit of a sq in a particular pieces' bitboard
+func (bit *Bitboard) Set(sq int) {
+	*bit |= Bitboard(constants.SetMask[sq])
 }

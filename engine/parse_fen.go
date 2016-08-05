@@ -2,6 +2,7 @@ package engine
 
 import (
 	"errors"
+	"go-chess/board"
 	"go-chess/constants"
 	"go-chess/models"
 	"go-chess/utils"
@@ -18,7 +19,7 @@ func ParseFEN(fen string, pos *models.SBoard) error {
 	rank := constants.Rank8
 	file := constants.FileA
 	piece := 0
-	ResetBoard(pos)
+	board.ResetBoard(pos)
 
 	// Parsing position of pieces in FEN notation
 	for (rank >= constants.Rank1) && (len(fen) > 0) {
@@ -88,7 +89,7 @@ func ParseFEN(fen string, pos *models.SBoard) error {
 
 		default:
 			log.Println("Error in parsing FEN")
-			ResetBoard(pos)
+			board.ResetBoard(pos)
 			return errors.New("Error in parsing FEN")
 		}
 		for i := 0; i < count; i++ {
@@ -98,7 +99,7 @@ func ParseFEN(fen string, pos *models.SBoard) error {
 				sq120 = utils.SQ120(sq64)
 			} else {
 				log.Println("Error in parsing FEN")
-				ResetBoard(pos)
+				board.ResetBoard(pos)
 				return errors.New("Error in parsing FEN")
 			}
 			if piece != constants.Empty {
@@ -112,7 +113,7 @@ func ParseFEN(fen string, pos *models.SBoard) error {
 	// Parsing side to play in FEN notation
 	if len(fen) <= 0 {
 		log.Println("Missing side in FEN notation")
-		ResetBoard(pos)
+		board.ResetBoard(pos)
 		return errors.New("Missing side in FEN notation")
 	}
 	if !((string(fen[0]) == "w") || (string(fen[0]) == "b")) {
@@ -129,7 +130,7 @@ func ParseFEN(fen string, pos *models.SBoard) error {
 	// Parsing castling in FEN notation
 	if len(fen) <= 0 {
 		log.Println("Missing castling permissions in FEN notation")
-		ResetBoard(pos)
+		board.ResetBoard(pos)
 		return errors.New("Missing castling permissions in FEN notation")
 	}
 	for i := 0; i < 4; i++ {
@@ -159,7 +160,7 @@ func ParseFEN(fen string, pos *models.SBoard) error {
 	// Parsing enPas in FEN notation
 	if len(fen) <= 0 {
 		log.Println("Missing enPas in FEN notation")
-		ResetBoard(pos)
+		board.ResetBoard(pos)
 		return errors.New("Missing enPas in FEN notation")
 	}
 	if string(fen[0]) != "-" {
