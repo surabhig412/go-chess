@@ -51,6 +51,9 @@ var SideKey uint64
 // CastleKeys represents random number for wK,wQ,bK,bQ side castling
 var CastleKeys [16]uint64
 
+var FilesBrd [BrdSqNum]int
+var RanksBrd [BrdSqNum]int
+
 // Possible values for pieces
 const (
 	Empty int = iota

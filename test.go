@@ -163,4 +163,19 @@ func Test() {
 	}
 	(&b).Print()
 
+	fmt.Println("\nFiles Board:")
+	for index := 0; index < BrdSqNum; index++ {
+		if index%10 == 0 && index != 0 {
+			fmt.Println()
+		}
+		fmt.Printf("%4d", FilesBrd[index])
+	}
+
+	fmt.Println("\nRanks Board:")
+	for index := 0; index < BrdSqNum; index++ {
+		if index%10 == 0 && index != 0 {
+			fmt.Println()
+		}
+		fmt.Printf("%4d", RanksBrd[index])
+	}
 }
