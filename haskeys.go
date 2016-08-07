@@ -1,8 +1,6 @@
 package main
 
-import (
-	"log"
-)
+import "log"
 
 // GeneratePosKey generates posKey of the board
 func GeneratePosKey(pos *SBoard) uint64 {
@@ -10,12 +8,10 @@ func GeneratePosKey(pos *SBoard) uint64 {
 	var finalKey uint64
 	for sq := 0; sq < BrdSqNum; sq++ {
 		piece = pos.Pieces[sq]
-		if piece != NoSq && piece != Empty {
-			if piece < Wp || piece > Bk {
-				continue
-			}
-			finalKey ^= PieceKeys[piece][sq]
+		if piece < Wp || piece > Bk {
+			continue
 		}
+		finalKey ^= PieceKeys[piece][sq]
 	}
 	if pos.Side == White {
 		finalKey ^= SideKey

@@ -86,12 +86,14 @@ func (pos *SBoard) Reset() {
 		pos.MajPce[index] = 0
 		pos.MinPce[index] = 0
 		pos.Material[index] = 0
+		pos.KingSq[index] = NoSq
 	}
 	for index := 0; index < 13; index++ {
 		pos.PceNum[index] = 0
+		for index2 := 0; index2 < 10; index2++ {
+			pos.PList[index][index2] = 0
+		}
 	}
-	pos.KingSq[White] = NoSq
-	pos.KingSq[Black] = NoSq
 	pos.Side = Both
 	pos.EnPas = NoSq
 	pos.FiftyMove = 0
@@ -262,6 +264,9 @@ func (pos *SBoard) Check() error {
 	}
 	if pos.Pieces[pos.KingSq[Black]] != Bk {
 		return errors.New("Black king square mismatch")
+	}
+	if pos.CastlePerm < 0 || pos.CastlePerm > 15 {
+		return errors.New("Castling permission mismatch")
 	}
 
 	return nil

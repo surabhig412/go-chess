@@ -19,7 +19,6 @@ func (bit Bitboard) Print() {
 			sq := FR2SQ(file, rank) //120 based
 			sq64 := SQ64(sq)        //64 based
 			expr := (shiftMe << uint64(sq64)) & uint64(bit)
-			// fmt.Println(expr)
 			if expr != 0 {
 				fmt.Printf("X")
 			} else {
