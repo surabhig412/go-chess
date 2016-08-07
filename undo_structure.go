@@ -1,4 +1,4 @@
-package models
+package main
 
 // SUndo is the structure of Undo when a step is undone
 type SUndo struct {

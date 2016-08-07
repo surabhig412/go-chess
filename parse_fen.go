@@ -1,65 +1,61 @@
-package engine
+package main
 
 import (
 	"errors"
-	"go-chess/board"
-	"go-chess/constants"
-	"go-chess/models"
-	"go-chess/utils"
 	"log"
 	"strconv"
 	"unicode/utf8"
 )
 
 // ParseFEN parses FEN notation
-func ParseFEN(fen string, pos *models.SBoard) error {
+func ParseFEN(fen string, pos *SBoard) error {
 	if len(fen) <= 0 || pos == nil {
 		log.Fatalln("FEN or board structure is invalid")
 	}
-	rank := constants.Rank8
-	file := constants.FileA
+	rank := Rank8
+	file := FileA
 	piece := 0
-	board.ResetBoard(pos)
+	pos.Reset()
 
 	// Parsing position of pieces in FEN notation
-	for (rank >= constants.Rank1) && (len(fen) > 0) {
+	for (rank >= Rank1) && (len(fen) > 0) {
 		count := 1
 		switch string(fen[0]) {
 		case "p":
-			piece = constants.Bp
+			piece = Bp
 			break
 		case "r":
-			piece = constants.Br
+			piece = Br
 			break
 		case "n":
-			piece = constants.Bn
+			piece = Bn
 			break
 		case "b":
-			piece = constants.Bb
+			piece = Bb
 			break
 		case "k":
-			piece = constants.Bk
+			piece = Bk
 			break
 		case "q":
-			piece = constants.Bq
+			piece = Bq
 			break
 		case "P":
-			piece = constants.Wp
+			piece = Wp
 			break
 		case "R":
-			piece = constants.Wr
+			piece = Wr
 			break
 		case "N":
-			piece = constants.Wn
+			piece = Wn
 			break
 		case "B":
-			piece = constants.Wb
+			piece = Wb
 			break
 		case "K":
-			piece = constants.Wk
+			piece = Wk
 			break
 		case "Q":
-			piece = constants.Wq
+			piece = Wq
 			break
 		case "1":
 			fallthrough
@@ -76,33 +72,33 @@ func ParseFEN(fen string, pos *models.SBoard) error {
 		case "7":
 			fallthrough
 		case "8":
-			piece = constants.Empty
+			piece = Empty
 			count, _ = strconv.Atoi(string(fen[0]))
 			break
 		case "/":
 			fallthrough
 		case " ":
 			rank--
-			file = constants.FileA
+			file = FileA
 			fen = fen[1:len(fen)]
 			continue
 
 		default:
 			log.Println("Error in parsing FEN")
-			board.ResetBoard(pos)
+			pos.Reset()
 			return errors.New("Error in parsing FEN")
 		}
 		for i := 0; i < count; i++ {
 			sq64 := (rank * 8) + file
 			var sq120 int
 			if sq64 >= 0 && sq64 < 64 {
-				sq120 = utils.SQ120(sq64)
+				sq120 = SQ120(sq64)
 			} else {
 				log.Println("Error in parsing FEN")
-				board.ResetBoard(pos)
+				pos.Reset()
 				return errors.New("Error in parsing FEN")
 			}
-			if piece != constants.Empty {
+			if piece != Empty {
 				pos.Pieces[sq120] = piece
 			}
 			file++
@@ -113,7 +109,7 @@ func ParseFEN(fen string, pos *models.SBoard) error {
 	// Parsing side to play in FEN notation
 	if len(fen) <= 0 {
 		log.Println("Missing side in FEN notation")
-		board.ResetBoard(pos)
+		pos.Reset()
 		return errors.New("Missing side in FEN notation")
 	}
 	if !((string(fen[0]) == "w") || (string(fen[0]) == "b")) {
@@ -121,16 +117,16 @@ func ParseFEN(fen string, pos *models.SBoard) error {
 		return errors.New("Error in parsing FEN, side should be w or b in FEN notation")
 	}
 	if string(fen[0]) == "w" {
-		pos.Side = constants.White
+		pos.Side = White
 	} else {
-		pos.Side = constants.Black
+		pos.Side = Black
 	}
 	fen = fen[2:len(fen)]
 
 	// Parsing castling in FEN notation
 	if len(fen) <= 0 {
 		log.Println("Missing castling permissions in FEN notation")
-		board.ResetBoard(pos)
+		pos.Reset()
 		return errors.New("Missing castling permissions in FEN notation")
 	}
 	for i := 0; i < 4; i++ {
@@ -139,16 +135,16 @@ func ParseFEN(fen string, pos *models.SBoard) error {
 		}
 		switch string(fen[0]) {
 		case "K":
-			pos.CastlePerm |= constants.Wkca
+			pos.CastlePerm |= Wkca
 			break
 		case "Q":
-			pos.CastlePerm |= constants.Wqca
+			pos.CastlePerm |= Wqca
 			break
 		case "k":
-			pos.CastlePerm |= constants.Bkca
+			pos.CastlePerm |= Bkca
 			break
 		case "q":
-			pos.CastlePerm |= constants.Bqca
+			pos.CastlePerm |= Bqca
 			break
 		default:
 			break
@@ -160,7 +156,7 @@ func ParseFEN(fen string, pos *models.SBoard) error {
 	// Parsing enPas in FEN notation
 	if len(fen) <= 0 {
 		log.Println("Missing enPas in FEN notation")
-		board.ResetBoard(pos)
+		pos.Reset()
 		return errors.New("Missing enPas in FEN notation")
 	}
 	if string(fen[0]) != "-" {
@@ -168,18 +164,18 @@ func ParseFEN(fen string, pos *models.SBoard) error {
 		file = int(fileRune) - 97
 		rankConvert, _ := strconv.Atoi(string(fen[1]))
 		rank = rankConvert - 1
-		if file < constants.FileA || file > constants.FileH {
+		if file < FileA || file > FileH {
 			log.Println("Error in parsing enPas in FEN notation")
 			return errors.New("Error in parsing enPas in FEN notation")
 		}
-		if rank < constants.Rank1 || rank > constants.Rank8 {
+		if rank < Rank1 || rank > Rank8 {
 			log.Println("Error in parsing enPas in FEN notation")
 			return errors.New("Error in parsing enPas in FEN notation")
 		}
-		pos.EnPas = utils.FR2SQ(file, rank)
+		pos.EnPas = FR2SQ(file, rank)
 	}
 
 	// Generating PosKey of board structure
-	pos.PosKey = utils.GeneratePosKey(pos)
+	pos.PosKey = GeneratePosKey(pos)
 	return nil
 }

@@ -1,27 +1,22 @@
 package main
 
-import (
-	"go-chess/constants"
-	"go-chess/utils"
-)
-
 // initSq120To64 initializes 64 and 120 sq arrays
 func initSq120To64() {
-	sq := constants.A1
+	sq := A1
 	sq64 := 0
-	for index := 0; index < constants.BrdSqNum; index++ {
-		constants.Sq120ToSq64[index] = 65
+	for index := 0; index < BrdSqNum; index++ {
+		Sq120ToSq64[index] = 65
 	}
 
 	for index := 0; index < 64; index++ {
-		constants.Sq64ToSq120[index] = 120
+		Sq64ToSq120[index] = 120
 	}
 
-	for rank := constants.Rank1; rank <= constants.Rank8; rank++ {
-		for file := constants.FileA; file <= constants.FileH; file++ {
-			sq = utils.FR2SQ(file, rank)
-			constants.Sq64ToSq120[sq64] = sq
-			constants.Sq120ToSq64[sq] = sq64
+	for rank := Rank1; rank <= Rank8; rank++ {
+		for file := FileA; file <= FileH; file++ {
+			sq = FR2SQ(file, rank)
+			Sq64ToSq120[sq64] = sq
+			Sq120ToSq64[sq] = sq64
 			sq64++
 		}
 	}
@@ -30,12 +25,12 @@ func initSq120To64() {
 // initBitMasks initializes SetMask and ClearMask arrays
 func initBitMasks() {
 	for index := 0; index < 64; index++ {
-		constants.SetMask[index] = uint64(0)
-		constants.ClearMask[index] = uint64(0)
+		SetMask[index] = uint64(0)
+		ClearMask[index] = uint64(0)
 	}
 	for index := 0; index < 64; index++ {
-		constants.SetMask[index] |= (uint64(1) << uint64(index))
-		constants.ClearMask[index] = ^(constants.SetMask[index])
+		SetMask[index] |= (uint64(1) << uint64(index))
+		ClearMask[index] = ^(SetMask[index])
 	}
 }
 
@@ -43,12 +38,12 @@ func initBitMasks() {
 func initHashKeys() {
 	for index := 0; index < 13; index++ {
 		for index2 := 0; index2 < 120; index2++ {
-			constants.PieceKeys[index][index2] = utils.Rand64()
+			PieceKeys[index][index2] = Rand64()
 		}
 	}
-	constants.SideKey = utils.Rand64()
+	SideKey = Rand64()
 	for index := 0; index < 16; index++ {
-		constants.CastleKeys[index] = utils.Rand64()
+		CastleKeys[index] = Rand64()
 	}
 }
 

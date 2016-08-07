@@ -1,4 +1,4 @@
-package constants
+package main
 
 // Constants for the entire game of chess
 const (
@@ -6,6 +6,29 @@ const (
 	MaxGameMoves = 2048
 	StartFEN     = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 )
+
+// Possible values for various fields
+const (
+	PceChar  = ".PNBRQKpnbrqk" // . for empty
+	SideChar = "wb-"           // - for both
+	RankChar = "12345678"
+	FileChar = "abcdefgh"
+)
+
+// PieceBig shows whether respective piece of chess is big or not
+var PieceBig = [13]int{False, False, True, True, True, True, True, False, True, True, True, True, True}
+
+// PieceMaj shows whether respective piece of chess is major or not
+var PieceMaj = [13]int{False, False, False, False, True, True, True, False, False, False, True, True, True}
+
+// PieceMin shows whether respective piece of chess is minor or not
+var PieceMin = [13]int{False, False, True, True, False, False, False, False, True, True, False, False, False}
+
+// PieceVal shows values of respective pieces of chess
+var PieceVal = [13]int{0, 100, 325, 325, 550, 1000, 50000, 100, 325, 325, 550, 1000, 50000}
+
+// PieceCol shows colour of respective pieces of chess
+var PieceCol = [13]int{Both, White, White, White, White, White, White, Black, Black, Black, Black, Black, Black}
 
 // Sq120ToSq64 is used to convert a square in 120 sq board to a square in 64 sq board
 var Sq120ToSq64 [BrdSqNum]int

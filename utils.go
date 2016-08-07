@@ -1,7 +1,6 @@
-package utils
+package main
 
 import (
-	"go-chess/constants"
 	"math/rand"
 	"time"
 )
@@ -13,12 +12,12 @@ func FR2SQ(f, r int) int {
 
 // SQ64 returns 64-square equivalent of 120-square board
 func SQ64(sq120 int) int {
-	return constants.Sq120ToSq64[sq120]
+	return Sq120ToSq64[sq120]
 }
 
 // SQ120 returns 120-square equivalent of 64-square board
 func SQ120(sq64 int) int {
-	return constants.Sq64ToSq120[sq64]
+	return Sq64ToSq120[sq64]
 }
 
 // Rand64 creates a random 64 bit uint value

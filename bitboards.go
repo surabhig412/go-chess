@@ -1,8 +1,7 @@
-package utils
+package main
 
 import (
 	"fmt"
-	"go-chess/constants"
 	"strconv"
 	"strings"
 )
@@ -15,8 +14,8 @@ func (bit Bitboard) Print() {
 	var shiftMe uint64
 	shiftMe = 1
 	fmt.Println()
-	for rank := constants.Rank8; rank >= constants.Rank1; rank-- {
-		for file := constants.FileA; file <= constants.FileH; file++ {
+	for rank := Rank8; rank >= Rank1; rank-- {
+		for file := FileA; file <= FileH; file++ {
 			sq := FR2SQ(file, rank) //120 based
 			sq64 := SQ64(sq)        //64 based
 			expr := (shiftMe << uint64(sq64)) & uint64(bit)
@@ -57,10 +56,10 @@ func (bit Bitboard) Count() int {
 
 // Clear clears the bit of a sq in a particular pieces' bitboard
 func (bit *Bitboard) Clear(sq int) {
-	*bit &= Bitboard(constants.ClearMask[sq])
+	*bit &= Bitboard(ClearMask[sq])
 }
 
 // Set sets the bit of a sq in a particular pieces' bitboard
 func (bit *Bitboard) Set(sq int) {
-	*bit |= Bitboard(constants.SetMask[sq])
+	*bit |= Bitboard(SetMask[sq])
 }
