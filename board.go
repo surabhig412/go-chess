@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+)
 
 // SBoard is board structure
 type SBoard struct {
@@ -109,7 +112,7 @@ func (pos *SBoard) UpdateListsMaterial() {
 		if piece != Offboard && piece != Empty {
 			colour := PieceCol[piece]
 
-			// Setting piece types
+			// Updating piece types
 			if PieceBig[piece] == True {
 				pos.BigPce[colour]++
 			}
@@ -120,19 +123,19 @@ func (pos *SBoard) UpdateListsMaterial() {
 				pos.MinPce[colour]++
 			}
 
-			// Setting material of each side
+			// Updating material of each side
 			pos.Material[colour] += PieceVal[piece]
 
-			// Setting piece list
+			// Updating piece list
 			pos.PList[piece][pos.PceNum[piece]] = index
 			pos.PceNum[piece]++
 
-			// Setting King squares of each side
+			// Updating King squares of each side
 			if piece == Wk || piece == Bk {
 				pos.KingSq[colour] = index
 			}
 
-			// Setting pawns arrays as per the piece
+			// Updating pawns arrays as per the piece
 			if piece == Wp || piece == Bp {
 				pawnStructure := Bitboard(pos.Pawns[colour])
 				(&pawnStructure).Set(SQ64(index))
@@ -143,4 +146,123 @@ func (pos *SBoard) UpdateListsMaterial() {
 			}
 		}
 	}
+}
+
+// Check cross-checks if all pieces are placed properly
+func (pos *SBoard) Check() error {
+	var tempPceNumArr = [13]int{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+	var tempBigPceArr = [2]int{0, 0}
+	var tempMajPceArr = [2]int{0, 0}
+	var tempMinPceArr = [2]int{0, 0}
+	var tempMaterialArr = [2]int{0, 0}
+	var tempPawns = [3]uint64{pos.Pawns[White], pos.Pawns[Black], pos.Pawns[Both]}
+
+	// check piece lists
+	for tempPiece := Wp; tempPiece <= Bk; tempPiece++ {
+		for tempPieceNum := 0; tempPieceNum < pos.PceNum[tempPiece]; tempPieceNum++ {
+			sq120 := pos.PList[tempPiece][tempPieceNum]
+			if pos.Pieces[sq120] != tempPiece {
+				return errors.New("Piece List mismatch")
+			}
+		}
+	}
+
+	// check piece count and minor, major, big and material counters
+	for sq64 := 0; sq64 < 64; sq64++ {
+		sq120 := SQ120(sq64)
+		tempPiece := pos.Pieces[sq120]
+		tempPceNumArr[tempPiece]++
+		colour := PieceCol[tempPiece]
+		if colour == Black || colour == White {
+			if PieceBig[tempPiece] == True {
+				tempBigPceArr[colour]++
+			}
+			if PieceMaj[tempPiece] == True {
+				tempMajPceArr[colour]++
+			}
+			if PieceMin[tempPiece] == True {
+				tempMinPceArr[colour]++
+			}
+			tempMaterialArr[colour] += PieceVal[tempPiece]
+		}
+	}
+
+	for tempPiece := Wp; tempPiece <= Bk; tempPiece++ {
+		if tempPceNumArr[tempPiece] != pos.PceNum[tempPiece] {
+			return errors.New("Piece count mismatch")
+		}
+	}
+	for pieceColor := White; pieceColor <= Black; pieceColor++ {
+		if tempBigPceArr[pieceColor] != pos.BigPce[pieceColor] {
+			return errors.New("BigPce mismatch")
+		}
+		if tempMajPceArr[pieceColor] != pos.MajPce[pieceColor] {
+			return errors.New("MajPce mismatch")
+		}
+		if tempMinPceArr[pieceColor] != pos.MinPce[pieceColor] {
+			return errors.New("MinPce mismatch")
+		}
+		if tempMaterialArr[pieceColor] != pos.Material[pieceColor] {
+			return errors.New("Material mismatch")
+		}
+	}
+
+	// check bitboards count
+	pCount := (Bitboard(tempPawns[White])).Count()
+	if pCount != pos.PceNum[Wp] {
+		return errors.New("White pawn bitboard mismatch")
+	}
+	pCount = (Bitboard(tempPawns[Black])).Count()
+	if pCount != pos.PceNum[Bp] {
+		return errors.New("Black pawn bitboard mismatch")
+	}
+	pCount = (Bitboard(tempPawns[Both])).Count()
+	if pCount != (pos.PceNum[Wp] + pos.PceNum[Bp]) {
+		return errors.New("Both pawns bitboard mismatch")
+	}
+
+	// check bitboards squares
+	for tempPawns[White] != uint64(0) {
+		whiteBitboard := Bitboard(tempPawns[White])
+		sq64 := (&whiteBitboard).Pop()
+		tempPawns[White] = uint64(whiteBitboard)
+		if pos.Pieces[SQ120(sq64)] != Wp {
+			return errors.New("White pawn bitboard mapping to square mismatch")
+		}
+	}
+	for tempPawns[Black] != uint64(0) {
+		blackBitboard := Bitboard(tempPawns[Black])
+		sq64 := (&blackBitboard).Pop()
+		tempPawns[Black] = uint64(blackBitboard)
+		if pos.Pieces[SQ120(sq64)] != Bp {
+			return errors.New("Black pawn bitboard mapping to square mismatch")
+		}
+	}
+	for tempPawns[Both] != uint64(0) {
+		bothColourBitboard := Bitboard(tempPawns[Both])
+		sq64 := (&bothColourBitboard).Pop()
+		tempPawns[Both] = uint64(bothColourBitboard)
+		if !((pos.Pieces[SQ120(sq64)] == Wp) || (pos.Pieces[SQ120(sq64)] == Bp)) {
+			return errors.New("Both pawns bitboard mapping to square mismatch")
+		}
+	}
+
+	// check side, PosKey, enPas, king squares and castle permissions
+	if !((pos.Side == White) || (pos.Side == Black)) {
+		return errors.New("Side mismatch")
+	}
+	if GeneratePosKey(pos) != pos.PosKey {
+		return errors.New("PosKey mismatch")
+	}
+	if !((pos.EnPas == NoSq) || (RanksBrd[pos.EnPas] == Rank6 && pos.Side == White) || (RanksBrd[pos.EnPas] == Rank3 && pos.Side == Black)) {
+		return errors.New("EnPas rule mismatch")
+	}
+	if pos.Pieces[pos.KingSq[White]] != Wk {
+		return errors.New("White king square mismatch")
+	}
+	if pos.Pieces[pos.KingSq[Black]] != Bk {
+		return errors.New("Black king square mismatch")
+	}
+
+	return nil
 }

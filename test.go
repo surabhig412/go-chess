@@ -191,4 +191,33 @@ func Test() {
 	fmt.Println("\nBoth pawns: ")
 	pawnStructure = Bitboard(board.Pawns[Both])
 	pawnStructure.Print()
+
+	fmt.Println("\nChecking if board structure is correct:")
+	ParseFEN("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1", &board)
+	err = (&board).Check()
+	if err != nil {
+		fmt.Println("Error: ", err)
+	} else {
+		fmt.Println("Checking successful")
+	}
+
+	fmt.Println("\nChecking if board structure is incorrect after forcefully changing piece count:")
+	ParseFEN("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1", &board)
+	board.PceNum[Wp]--
+	err = (&board).Check()
+	if err != nil {
+		fmt.Println("Error: ", err)
+	} else {
+		fmt.Println("Checking successful")
+	}
+
+	fmt.Println("\nChecking if board structure is incorrect after forcefully changing posKey:")
+	ParseFEN("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1", &board)
+	board.PosKey ^= SideKey
+	err = (&board).Check()
+	if err != nil {
+		fmt.Println("Error: ", err)
+	} else {
+		fmt.Println("Checking successful")
+	}
 }
