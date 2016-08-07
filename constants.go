@@ -51,7 +51,10 @@ var SideKey uint64
 // CastleKeys represents random number for wK,wQ,bK,bQ side castling
 var CastleKeys [16]uint64
 
+// FilesBrd represents the file to which a square belongs to
 var FilesBrd [BrdSqNum]int
+
+// RanksBrd represents the rank to which a square belongs to
 var RanksBrd [BrdSqNum]int
 
 // Possible values for pieces

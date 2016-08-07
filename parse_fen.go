@@ -177,5 +177,7 @@ func ParseFEN(fen string, pos *SBoard) error {
 
 	// Generating PosKey of board structure
 	pos.PosKey = GeneratePosKey(pos)
+
+	pos.UpdateListsMaterial()
 	return nil
 }

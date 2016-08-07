@@ -82,7 +82,7 @@ func (pos *SBoard) Reset() {
 		pos.BigPce[index] = 0
 		pos.MajPce[index] = 0
 		pos.MinPce[index] = 0
-		pos.Pawns[index] = uint64(0)
+		pos.Material[index] = 0
 	}
 	for index := 0; index < 13; index++ {
 		pos.PceNum[index] = 0
@@ -96,10 +96,14 @@ func (pos *SBoard) Reset() {
 	pos.HisPly = 0
 	pos.CastlePerm = 0
 	pos.PosKey = uint64(0)
+
+	for index := 0; index < 3; index++ {
+		pos.Pawns[index] = uint64(0)
+	}
 }
 
-// UpdateListMaterial updates various arrays based on the piece on board
-func (pos *SBoard) UpdateListMaterial() {
+// UpdateListsMaterial updates various arrays based on the piece on board
+func (pos *SBoard) UpdateListsMaterial() {
 	for index := 0; index < BrdSqNum; index++ {
 		piece := pos.Pieces[index]
 		if piece != Offboard && piece != Empty {
@@ -126,6 +130,16 @@ func (pos *SBoard) UpdateListMaterial() {
 			// Setting King squares of each side
 			if piece == Wk || piece == Bk {
 				pos.KingSq[colour] = index
+			}
+
+			// Setting pawns arrays as per the piece
+			if piece == Wp || piece == Bp {
+				pawnStructure := Bitboard(pos.Pawns[colour])
+				(&pawnStructure).Set(SQ64(index))
+				pos.Pawns[colour] = uint64(pawnStructure)
+				pawnStructure = Bitboard(pos.Pawns[Both])
+				(&pawnStructure).Set(SQ64(index))
+				pos.Pawns[Both] = uint64(pawnStructure)
 			}
 		}
 	}
