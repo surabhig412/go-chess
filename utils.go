@@ -25,3 +25,23 @@ func Rand64() uint64 {
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	return (uint64(r.Int63()) | uint64((0|1)<<63))
 }
+
+// IsBQ returns if the piece is bishop or queen or not
+func IsBQ(piece int) int {
+	return PieceBishopQueen[piece]
+}
+
+// IsRQ returns if the piece is rook or queen or not
+func IsRQ(piece int) int {
+	return PieceRookQueen[piece]
+}
+
+// IsKn returns if the piece is knight or not
+func IsKn(piece int) int {
+	return PieceKnight[piece]
+}
+
+// IsKi returns if the piece is king or not
+func IsKi(piece int) int {
+	return PieceKing[piece]
+}

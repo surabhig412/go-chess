@@ -36,6 +36,30 @@ var Sq120ToSq64 [BrdSqNum]int
 // Sq64ToSq120 is used to convert a square in 64 sq board to a square in 120 sq board
 var Sq64ToSq120 [64]int
 
+// KnDir represents possible directions in which knight can move
+var KnDir = [8]int{-8, -19, -21, -12, 8, 19, 21, 12}
+
+// RkDir represents possible directions in which rook can move
+var RkDir = [4]int{-1, -10, 1, 10}
+
+// BiDir represents possible directions in which bishop can move
+var BiDir = [4]int{-9, -11, 11, 9}
+
+// KiDir represents possible directions in which king can move
+var KiDir = [8]int{-1, -10, 1, 10, -9, -11, 11, 9}
+
+// PieceKnight is used to find out if a piece is knight or not
+var PieceKnight = [13]int{False, False, True, False, False, False, False, False, True, False, False, False, False}
+
+// PieceKing is used to find out if a piece is king or not
+var PieceKing = [13]int{False, False, False, False, False, False, True, False, False, False, False, False, True}
+
+// PieceRookQueen is used to find out if a piece is rook or queen or not
+var PieceRookQueen = [13]int{False, False, False, False, True, True, False, False, False, False, True, True, False}
+
+// PieceBishopQueen is used to find out if a piece is bishop or queen or not
+var PieceBishopQueen = [13]int{False, False, False, True, False, True, False, False, False, True, False, True, False}
+
 // SetMask sets the bit in 64 sq board
 var SetMask [64]uint64
 
