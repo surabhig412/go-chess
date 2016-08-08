@@ -220,4 +220,38 @@ func Test() {
 	} else {
 		fmt.Println("Checking successful")
 	}
+
+	fmt.Println("\nChecking squares attacked when FEN is 8/3q4/8/8/4Q3/8/8/8 w - - 0 2:")
+	ParseFEN("8/3q4/8/8/4Q3/8/8/8 w - - 0 2", &board)
+	board.Print()
+	fmt.Println("\nWhite attacking: ")
+	printSqAttacked(White, board)
+	fmt.Println("\nBlack attacking: ")
+	printSqAttacked(Black, board)
+
+	fmt.Println("\nChecking squares attacked when FEN is 8/3q1p2/8/5P2/4Q3/8/8/8 w - - 0 2:")
+	ParseFEN("8/3q1p2/8/5P2/4Q3/8/8/8 w - - 0 2", &board)
+	board.Print()
+	fmt.Println("\nWhite attacking: ")
+	printSqAttacked(White, board)
+	fmt.Println("\nBlack attacking: ")
+	printSqAttacked(Black, board)
+}
+
+func printSqAttacked(side int, pos SBoard) {
+	for rank := Rank8; rank >= Rank1; rank-- {
+		for file := FileA; file <= FileH; file++ {
+			sq := FR2SQ(file, rank)
+			result, err1 := SqAttacked(sq, side, &pos)
+			if err1 != nil {
+				fmt.Println("Error: ", err1)
+			}
+			if result {
+				fmt.Printf("X")
+			} else {
+				fmt.Printf("-")
+			}
+		}
+		fmt.Println()
+	}
 }
