@@ -81,6 +81,15 @@ var FilesBrd [BrdSqNum]int
 // RanksBrd represents the rank to which a square belongs to
 var RanksBrd [BrdSqNum]int
 
+// Possible flags for representing a move
+const (
+	MFlagEP   int = 0x40000   // EnPas bit
+	MFlagPS   int = 0x80000   // PawnStart move
+	MFlagCA   int = 0x1000000 // Castling move
+	MFlagCAP  int = 0x7C000   // Captured piece move
+	MFlagPROM int = 0xF00000  // Promoted piece move
+)
+
 // Possible values for pieces
 const (
 	Empty int = iota

@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"strconv"
+)
 
 // Test tests functions of go-chess
 func Test() {
@@ -236,6 +239,25 @@ func Test() {
 	printSqAttacked(White, board)
 	fmt.Println("\nBlack attacking: ")
 	printSqAttacked(Black, board)
+
+	fmt.Println("Check from and to squares of move: 0110001111011010")
+	num, _ := strconv.ParseInt("0110001111011010", 2, 32)
+
+	result := FromSq(int(num))
+	fmt.Println("From square: ", strconv.FormatInt(int64(result), 16))
+
+	result = ToSq(int(num))
+	fmt.Println("To square: ", strconv.FormatInt(int64(result), 16))
+
+	fmt.Println("\nMaking a move with from = 6, to = 12, capture = Wr, promote = Br: ")
+	move := 0
+	from := 6
+	to := 12
+	capture := Wr
+	promote := Br
+	move = from | (to << 7) | (capture << 14) | (promote << 20)
+	fmt.Printf("\nDecimal: %d, Hex: %s, Binary: %s\n", move, strconv.FormatInt(int64(move), 16), strconv.FormatInt(int64(move), 2))
+	fmt.Printf("\nChecking functions with move as input: From: %d To: %d Captured: %d, Promoted: %d\n", FromSq(move), ToSq(move), Captured(move), Promoted(move))
 }
 
 func printSqAttacked(side int, pos SBoard) {
