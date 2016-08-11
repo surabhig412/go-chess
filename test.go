@@ -258,6 +258,8 @@ func Test() {
 	move = from | (to << 7) | (capture << 14) | (promote << 20)
 	fmt.Printf("\nDecimal: %d, Hex: %s, Binary: %s\n", move, strconv.FormatInt(int64(move), 16), strconv.FormatInt(int64(move), 2))
 	fmt.Printf("\nChecking functions with move as input: From: %d To: %d Captured: %d, Promoted: %d\n", FromSq(move), ToSq(move), Captured(move), Promoted(move))
+	move |= MFlagPS
+	fmt.Println("Added flag for pawn start: ", (move & MFlagPS))
 }
 
 func printSqAttacked(side int, pos SBoard) {
