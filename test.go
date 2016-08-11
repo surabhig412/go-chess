@@ -258,8 +258,27 @@ func Test() {
 	move = from | (to << 7) | (capture << 14) | (promote << 20)
 	fmt.Printf("\nDecimal: %d, Hex: %s, Binary: %s\n", move, strconv.FormatInt(int64(move), 16), strconv.FormatInt(int64(move), 2))
 	fmt.Printf("\nChecking functions with move as input: From: %d To: %d Captured: %d, Promoted: %d\n", FromSq(move), ToSq(move), Captured(move), Promoted(move))
+	fmt.Println("Not Added flag for pawn start: ", (move & MFlagPS))
 	move |= MFlagPS
 	fmt.Println("Added flag for pawn start: ", (move & MFlagPS))
+
+	fmt.Println("\nPrinting full move with promotion character as from = A2, to = H7, capture = Wr, promote = Wb:")
+	move = A2 | (H7 << 7) | (Wr << 14) | (Wb << 20)
+	fmt.Printf("Algebraic from: %s\n", PrintSq(A2))
+	fmt.Printf("Algebraic to: %s\n", PrintSq(H7))
+	fmt.Printf("Algebraic move: %s\n", PrintMove(move))
+
+	fmt.Println("\nPrinting full move with no promotion character as from = A2, to = H7, capture = Wr")
+	move = A2 | (H7 << 7) | (Wr << 14)
+	fmt.Printf("Algebraic from: %s\n", PrintSq(A2))
+	fmt.Printf("Algebraic to: %s\n", PrintSq(H7))
+	fmt.Printf("Algebraic move: %s\n", PrintMove(move))
+
+	fmt.Println("\nPrinting full move with invalid promotion character as from = A2, to = H7, capture = Wr, promote = Bk")
+	move = A2 | (H7 << 7) | (Wr << 14) | (Bk << 20)
+	fmt.Printf("Algebraic from: %s\n", PrintSq(A2))
+	fmt.Printf("Algebraic to: %s\n", PrintSq(H7))
+	fmt.Printf("Algebraic move: %s\n", PrintMove(move))
 }
 
 func printSqAttacked(side int, pos SBoard) {
