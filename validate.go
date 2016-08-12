@@ -15,3 +15,27 @@ func SideValid(side int) bool {
 	}
 	return false
 }
+
+// FileRankValid validates if file or rank is valid or not
+func FileRankValid(fr int) bool {
+	if fr >= 0 && fr <= 7 {
+		return true
+	}
+	return false
+}
+
+// PieceValidEmpty validates if piece is valid or empty
+func PieceValidEmpty(piece int) bool {
+	if piece >= Empty && piece <= Bk {
+		return true
+	}
+	return false
+}
+
+// PieceValid validates if piece is valid
+func PieceValid(piece int) bool {
+	if piece >= Wp && piece <= Bk {
+		return true
+	}
+	return false
+}

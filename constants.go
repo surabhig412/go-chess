@@ -2,9 +2,10 @@ package main
 
 // Constants for the entire game of chess
 const (
-	BrdSqNum     = 120
-	MaxGameMoves = 2048
-	StartFEN     = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+	BrdSqNum         = 120
+	MaxGameMoves     = 2048
+	MaxPositionMoves = 256
+	StartFEN         = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 )
 
 // Possible values for various fields

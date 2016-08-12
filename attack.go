@@ -11,10 +11,10 @@ func SqAttacked(sq, side int, pos *SBoard) (bool, error) {
 	if !SideValid(side) {
 		return false, errors.New("Side is invalid")
 	}
-	// err := pos.Check()
-	// if err != nil {
-	// 	return false, err
-	// }
+	err := pos.Check()
+	if err != nil {
+		return false, err
+	}
 	// pawns are attacking or not
 	if side == White {
 		if (pos.Pieces[sq-9] == Wp) || (pos.Pieces[sq-11] == Wp) {
