@@ -73,6 +73,30 @@ func (list *SMoveList) AddWhitePawnMove(pos *SBoard, from, to int) {
 	}
 }
 
+// AddBlackPawnCaptureMove are possible capture moves of black pawn
+func (list *SMoveList) AddBlackPawnCaptureMove(pos *SBoard, from, to, capture int) {
+	if RanksBrd[from] == Rank2 {
+		list.AddCaptureMove(pos, Move(from, to, capture, Bq, 0))
+		list.AddCaptureMove(pos, Move(from, to, capture, Br, 0))
+		list.AddCaptureMove(pos, Move(from, to, capture, Bb, 0))
+		list.AddCaptureMove(pos, Move(from, to, capture, Bn, 0))
+	} else {
+		list.AddCaptureMove(pos, Move(from, to, capture, Empty, 0))
+	}
+}
+
+// AddBlackPawnMove are possible quiet moves of black pawn
+func (list *SMoveList) AddBlackPawnMove(pos *SBoard, from, to int) {
+	if RanksBrd[from] == Rank2 {
+		list.AddQuietMove(pos, Move(from, to, Empty, Bq, 0))
+		list.AddQuietMove(pos, Move(from, to, Empty, Br, 0))
+		list.AddQuietMove(pos, Move(from, to, Empty, Bb, 0))
+		list.AddQuietMove(pos, Move(from, to, Empty, Bn, 0))
+	} else {
+		list.AddQuietMove(pos, Move(from, to, Empty, Empty, 0))
+	}
+}
+
 // GenerateAllMoves will generate all possible moves of board
 func (list *SMoveList) GenerateAllMoves(pos *SBoard) error {
 	err := pos.Check()
@@ -106,7 +130,30 @@ func (list *SMoveList) GenerateAllMoves(pos *SBoard) error {
 			}
 		}
 	} else {
-
+		for pieceNum := 0; pieceNum < pos.PceNum[Bp]; pieceNum++ {
+			sq := pos.PList[Bp][pieceNum]
+			if !SqOnBoard(sq) {
+				return errors.New("Square is not on board")
+			}
+			if pos.Pieces[sq-10] == Empty {
+				list.AddBlackPawnMove(pos, sq, sq-10)
+				if RanksBrd[sq] == Rank7 && pos.Pieces[sq-20] == Empty {
+					list.AddQuietMove(pos, Move(sq, sq-20, Empty, Empty, MFlagPS))
+				}
+			}
+			if SqOnBoard(sq-9) && PieceCol[pos.Pieces[sq-9]] == White {
+				list.AddBlackPawnCaptureMove(pos, sq, sq-9, pos.Pieces[sq-9])
+			}
+			if SqOnBoard(sq-11) && PieceCol[pos.Pieces[sq-11]] == White {
+				list.AddBlackPawnCaptureMove(pos, sq, sq-11, pos.Pieces[sq-11])
+			}
+			if sq-9 == pos.EnPas {
+				list.AddCaptureMove(pos, Move(sq, sq-9, Empty, Empty, MFlagEP))
+			}
+			if sq-11 == pos.EnPas {
+				list.AddCaptureMove(pos, Move(sq, sq-11, Empty, Empty, MFlagEP))
+			}
+		}
 	}
 	return nil
 }

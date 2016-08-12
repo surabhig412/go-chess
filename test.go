@@ -290,6 +290,16 @@ func Test() {
 	var movelist SMoveList
 	(&movelist).GenerateAllMoves(&board)
 	(&movelist).Print()
+
+	fmt.Println("\nTesting total black pawn moves: rnbqkbnr/p1p1p3/3p3p/1p1p4/2P1Pp2/8/PP1P1PpP/RNBQKB1R b KQkq e3 0 1")
+	err = ParseFEN("rnbqkbnr/p1p1p3/3p3p/1p1p4/2P1Pp2/8/PP1P1PpP/RNBQKB1R b KQkq e3 0 1", &board)
+	if err != nil {
+		fmt.Println("Error: ", err)
+	}
+	(&board).Print()
+
+	(&movelist).GenerateAllMoves(&board)
+	(&movelist).Print()
 }
 
 func printSqAttacked(side int, pos SBoard) {
