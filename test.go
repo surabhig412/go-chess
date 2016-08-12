@@ -279,6 +279,17 @@ func Test() {
 	fmt.Printf("Algebraic from: %s\n", PrintSq(A2))
 	fmt.Printf("Algebraic to: %s\n", PrintSq(H7))
 	fmt.Printf("Algebraic move: %s\n", PrintMove(move))
+
+	fmt.Println("\nTesting total white pawn moves: rnbqkb1r/pp1p1pPp/8/2p1pR2/1P1P4/3P3P/P1P1P3/RNBQKBNR w KQkq e6 0 1")
+	err = ParseFEN("rnbqkb1r/pp1p1pPp/8/2p1pP2/1P1P4/3P3P/P1P1P3/RNBQKBNR w KQkq e6 0 1", &board)
+	if err != nil {
+		fmt.Println("Error: ", err)
+	}
+	(&board).Print()
+
+	var movelist SMoveList
+	(&movelist).GenerateAllMoves(&board)
+	(&movelist).Print()
 }
 
 func printSqAttacked(side int, pos SBoard) {

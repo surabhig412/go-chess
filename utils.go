@@ -65,3 +65,8 @@ func Captured(num int) int {
 func Promoted(num int) int {
 	return ((num >> 20) & 0xF)
 }
+
+// Move creates move with all possible parameters
+func Move(from, to, capture, promoted, flag int) int {
+	return (from | (to << 7) | (capture << 14) | (promoted << 20) | flag)
+}
