@@ -317,6 +317,14 @@ func Test() {
 	}
 	(&movelist2).GenerateAllMoves(&board)
 
+	fmt.Println("Testing moves of knights:")
+	var movelist3 SMoveList
+	err = ParseFEN("5k2/1n6/4n3/6N1/8/3N4/8/5K2 b - - 0 1", &board)
+	if err != nil {
+		fmt.Println("Error: ", err)
+	}
+	(&board).Print()
+	(&movelist3).GenerateAllMoves(&board)
 }
 
 func printSqAttacked(side int, pos SBoard) {

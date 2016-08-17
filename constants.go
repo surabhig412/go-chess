@@ -46,6 +46,26 @@ var LoopSlideIndex = [2]int{0, 4}
 // LoopNonSlideIndex defines index from where black and white non-sliding pieces start in LoopNonSlidePce array
 var LoopNonSlideIndex = [2]int{0, 3}
 
+// PieceDir is direction of each piece
+var PieceDir = [13][8]int{
+	{0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0},
+	{-8, -19, -21, -12, 8, 19, 21, 12},
+	{-9, -11, 11, 9, 0, 0, 0, 0},
+	{-1, -10, 1, 10, 0, 0, 0, 0},
+	{-1, -10, 1, 10, -9, -11, 11, 9},
+	{-1, -10, 1, 10, -9, -11, 11, 9},
+	{0, 0, 0, 0, 0, 0, 0},
+	{-8, -19, -21, -12, 8, 19, 21, 12},
+	{-9, -11, 11, 9, 0, 0, 0, 0},
+	{-1, -10, 1, 10, 0, 0, 0, 0},
+	{-1, -10, 1, 10, -9, -11, 11, 9},
+	{-1, -10, 1, 10, -9, -11, 11, 9},
+}
+
+// NumDir specifies number of directions in which a piece can move
+var NumDir = [13]int{0, 0, 8, 4, 4, 8, 8, 0, 8, 4, 4, 8, 8}
+
 // Sq120ToSq64 is used to convert a square in 120 sq board to a square in 64 sq board
 var Sq120ToSq64 [BrdSqNum]int
 
