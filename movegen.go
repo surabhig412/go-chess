@@ -198,6 +198,29 @@ func (list *SMoveList) GenerateAllMoves(pos *SBoard) error {
 			return errors.New("Piece is not valid")
 		}
 		fmt.Printf("sliders piece index: %d piece:%d \n", pieceIndex, piece)
+		for pieceNum := 0; pieceNum < pos.PceNum[piece]; pieceNum++ {
+			sq := pos.PList[piece][pieceNum]
+			if !SqOnBoard(sq) {
+				return errors.New("Square is not on board")
+			}
+			fmt.Printf("Piece: %c on %s \n", PceChar[piece], PrintSq(sq))
+			for index := 0; index < NumDir[piece]; index++ {
+				direction := PieceDir[piece][index]
+				checkSq := sq + direction
+				for SqOnBoard(checkSq) {
+					if pos.Pieces[checkSq] != Empty {
+						if PieceCol[pos.Pieces[checkSq]] == (pos.Side ^ 1) {
+							fmt.Printf("Capture on %s\n", PrintSq(checkSq))
+							list.addCaptureMove(pos, Move(sq, checkSq, pos.Pieces[checkSq], Empty, 0))
+						}
+						break
+					}
+					fmt.Printf("Normal on %s\n", PrintSq(checkSq))
+					list.addQuietMove(pos, Move(sq, checkSq, Empty, Empty, 0))
+					checkSq += direction
+				}
+			}
+		}
 		pieceIndex++
 		piece = LoopSlidePce[pieceIndex]
 	}

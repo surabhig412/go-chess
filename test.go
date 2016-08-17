@@ -302,29 +302,83 @@ func Test() {
 	(&movelist).Print()
 
 	fmt.Println("Testing moves of sliding and non-sliding pieces:")
-	var movelist1 SMoveList
 	err = ParseFEN("rnbqkb1r/pp1p1pPp/8/2p1pP2/1P1P4/3P3P/P1P1P3/RNBQKBNR w KQkq e6 0 1", &board)
 	if err != nil {
 		fmt.Println("Error: ", err)
 	}
-	(&movelist1).GenerateAllMoves(&board)
+	(&movelist).GenerateAllMoves(&board)
 
 	fmt.Println("Testing moves of sliding and non-sliding pieces:")
-	var movelist2 SMoveList
 	err = ParseFEN("rnbqkbnr/p1p1p3/3p3p/1p1p4/2P1Pp2/8/PP1P1PpP/RNBQKB1R b KQkq e3 0 1", &board)
 	if err != nil {
 		fmt.Println("Error: ", err)
 	}
-	(&movelist2).GenerateAllMoves(&board)
+	(&movelist).GenerateAllMoves(&board)
 
-	fmt.Println("Testing moves of knights:")
-	var movelist3 SMoveList
+	fmt.Println("Testing moves of black knights:")
 	err = ParseFEN("5k2/1n6/4n3/6N1/8/3N4/8/5K2 b - - 0 1", &board)
 	if err != nil {
 		fmt.Println("Error: ", err)
 	}
 	(&board).Print()
-	(&movelist3).GenerateAllMoves(&board)
+	(&movelist).GenerateAllMoves(&board)
+
+	fmt.Println("Testing moves of white knights:")
+	err = ParseFEN("5k2/1n6/4n3/6N1/8/3N4/8/5K2 w - - 0 1", &board)
+	if err != nil {
+		fmt.Println("Error: ", err)
+	}
+	(&board).Print()
+	(&movelist).GenerateAllMoves(&board)
+
+	fmt.Println("Testing moves of white rook:")
+	err = ParseFEN("6k1/8/5r2/8/1nR5/5N2/8/6K1 w - - 0 1", &board)
+	if err != nil {
+		fmt.Println("Error: ", err)
+	}
+	(&board).Print()
+	(&movelist).GenerateAllMoves(&board)
+
+	fmt.Println("Testing moves of black rook:")
+	err = ParseFEN("6k1/8/5r2/8/1nR5/5N2/8/6K1 b - - 0 1", &board)
+	if err != nil {
+		fmt.Println("Error: ", err)
+	}
+	(&board).Print()
+	(&movelist).GenerateAllMoves(&board)
+
+	fmt.Println("Testing moves of white queen:")
+	err = ParseFEN("6k1/8/4nq2/8/1nQ5/5N2/1N6/6K1 w - - 0 1", &board)
+	if err != nil {
+		fmt.Println("Error: ", err)
+	}
+	(&board).Print()
+	(&movelist).GenerateAllMoves(&board)
+
+	fmt.Println("Testing moves of black queen:")
+	err = ParseFEN("6k1/8/4nq2/8/1nQ5/5N2/1N6/6K1 b - - 0 1", &board)
+	if err != nil {
+		fmt.Println("Error: ", err)
+	}
+	(&board).Print()
+	(&movelist).GenerateAllMoves(&board)
+
+	fmt.Println("Testing moves of black bishops:")
+	err = ParseFEN("6k1/1b6/4n3/8/1n4B1/1B3N2/1N6/2b3K1 b - - 0 1", &board)
+	if err != nil {
+		fmt.Println("Error: ", err)
+	}
+	(&board).Print()
+	(&movelist).GenerateAllMoves(&board)
+
+	fmt.Println("Testing moves of white bishops:")
+	err = ParseFEN("6k1/1b6/4n3/8/1n4B1/1B3N2/1N6/2b3K1 w - - 0 1", &board)
+	if err != nil {
+		fmt.Println("Error: ", err)
+	}
+	(&board).Print()
+	(&movelist).GenerateAllMoves(&board)
+
 }
 
 func printSqAttacked(side int, pos SBoard) {
