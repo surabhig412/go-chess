@@ -31,6 +31,21 @@ var PieceVal = [13]int{0, 100, 325, 325, 550, 1000, 50000, 100, 325, 325, 550, 1
 // PieceCol shows colour of respective pieces of chess
 var PieceCol = [13]int{Both, White, White, White, White, White, White, Black, Black, Black, Black, Black, Black}
 
+// PieceSlides shows if the piece is sliding piece or not
+var PieceSlides = [13]int{False, False, False, True, True, True, False, False, False, True, True, True, False}
+
+// LoopSlidePce is defined to loop through white or black sliding pieces
+var LoopSlidePce = [8]int{Wb, Wr, Wq, 0, Bb, Br, Bq, 0}
+
+// LoopNonSlidePce is defined to loop through white or black sliding pieces
+var LoopNonSlidePce = [6]int{Wn, Wk, 0, Bn, Bk, 0}
+
+// LoopSlideIndex defines index from where black and white sliding pieces start in LoopSlidePce array
+var LoopSlideIndex = [2]int{0, 4}
+
+// LoopNonSlideIndex defines index from where black and white non-sliding pieces start in LoopNonSlidePce array
+var LoopNonSlideIndex = [2]int{0, 3}
+
 // Sq120ToSq64 is used to convert a square in 120 sq board to a square in 64 sq board
 var Sq120ToSq64 [BrdSqNum]int
 

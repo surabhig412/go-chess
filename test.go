@@ -300,6 +300,23 @@ func Test() {
 
 	(&movelist).GenerateAllMoves(&board)
 	(&movelist).Print()
+
+	fmt.Println("Testing moves of sliding and non-sliding pieces:")
+	var movelist1 SMoveList
+	err = ParseFEN("rnbqkb1r/pp1p1pPp/8/2p1pP2/1P1P4/3P3P/P1P1P3/RNBQKBNR w KQkq e6 0 1", &board)
+	if err != nil {
+		fmt.Println("Error: ", err)
+	}
+	(&movelist1).GenerateAllMoves(&board)
+
+	fmt.Println("Testing moves of sliding and non-sliding pieces:")
+	var movelist2 SMoveList
+	err = ParseFEN("rnbqkbnr/p1p1p3/3p3p/1p1p4/2P1Pp2/8/PP1P1PpP/RNBQKB1R b KQkq e3 0 1", &board)
+	if err != nil {
+		fmt.Println("Error: ", err)
+	}
+	(&movelist2).GenerateAllMoves(&board)
+
 }
 
 func printSqAttacked(side int, pos SBoard) {
