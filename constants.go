@@ -16,13 +16,13 @@ const (
 	FileChar = "abcdefgh"
 )
 
-// PieceBig shows whether respective piece of chess is big or not
+// PieceBig shows whether respective piece of chess is big or not(except pawns all big)
 var PieceBig = [13]int{False, False, True, True, True, True, True, False, True, True, True, True, True}
 
-// PieceMaj shows whether respective piece of chess is major or not
+// PieceMaj shows whether respective piece of chess is major or not(rook, quuen and king are major pieces)
 var PieceMaj = [13]int{False, False, False, False, True, True, True, False, False, False, True, True, True}
 
-// PieceMin shows whether respective piece of chess is minor or not
+// PieceMin shows whether respective piece of chess is minor or not(knight and bishop are minor pieces)
 var PieceMin = [13]int{False, False, True, True, False, False, False, False, True, True, False, False, False}
 
 // PieceVal shows values of respective pieces of chess
@@ -116,6 +116,9 @@ var FilesBrd [BrdSqNum]int
 
 // RanksBrd represents the rank to which a square belongs to
 var RanksBrd [BrdSqNum]int
+
+// CastlePerm gives castling permission to each square on the board
+var CastlePerm [BrdSqNum]int
 
 // Possible flags for representing a move
 const (

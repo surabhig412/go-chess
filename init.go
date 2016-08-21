@@ -64,10 +64,23 @@ func initFilesRankBrd() {
 	}
 }
 
+func initCastlePermission() {
+	for index := 0; index < BrdSqNum; index++ {
+		CastlePerm[index] = 15
+	}
+	CastlePerm[A1] = 13 // disables Wqca
+	CastlePerm[E1] = 12 // disables Wqca and Wkca
+	CastlePerm[H1] = 14 // disables Wkca
+	CastlePerm[A8] = 7  // disables Bqca
+	CastlePerm[E8] = 3  // disables Bqca and Bkca
+	CastlePerm[H8] = 11 // disables Bkca
+}
+
 // AllInit is used to initialize arrays, masks and keys of the board
 func AllInit() {
 	initSq120To64()
 	initBitMasks()
 	initHashKeys()
 	initFilesRankBrd()
+	initCastlePermission()
 }
