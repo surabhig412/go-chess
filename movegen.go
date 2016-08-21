@@ -163,7 +163,6 @@ func (list *SMoveList) GenerateAllMoves(pos *SBoard) error {
 				resE1, _ := SqAttacked(E1, Black, pos)
 				resF1, _ := SqAttacked(F1, Black, pos)
 				if !resE1 && !resF1 {
-					fmt.Println("WKCA move generated")
 					list.addQuietMove(pos, Move(E1, G1, Empty, Empty, MFlagCA))
 				}
 			}
@@ -174,7 +173,6 @@ func (list *SMoveList) GenerateAllMoves(pos *SBoard) error {
 				resE1, _ := SqAttacked(E1, Black, pos)
 				resD1, _ := SqAttacked(D1, Black, pos)
 				if !resE1 && !resD1 {
-					fmt.Println("WQCA move generated")
 					list.addQuietMove(pos, Move(E1, C1, Empty, Empty, MFlagCA))
 				}
 			}
@@ -222,7 +220,6 @@ func (list *SMoveList) GenerateAllMoves(pos *SBoard) error {
 				resE8, _ := SqAttacked(E8, White, pos)
 				resF8, _ := SqAttacked(F8, White, pos)
 				if !resE8 && !resF8 {
-					fmt.Println("BKCA move generated")
 					list.addQuietMove(pos, Move(E8, G8, Empty, Empty, MFlagCA))
 				}
 			}
@@ -233,7 +230,6 @@ func (list *SMoveList) GenerateAllMoves(pos *SBoard) error {
 				resE8, _ := SqAttacked(E8, White, pos)
 				resD8, _ := SqAttacked(D8, White, pos)
 				if !resE8 && !resD8 {
-					fmt.Println("BQCA move generated")
 					list.addQuietMove(pos, Move(E8, C8, Empty, Empty, MFlagCA))
 				}
 			}
@@ -261,12 +257,10 @@ func (list *SMoveList) GenerateAllMoves(pos *SBoard) error {
 				for SqOnBoard(checkSq) {
 					if pos.Pieces[checkSq] != Empty {
 						if PieceCol[pos.Pieces[checkSq]] == (pos.Side ^ 1) {
-							fmt.Printf("Capture on %s\n", PrintSq(checkSq))
 							list.addCaptureMove(pos, Move(sq, checkSq, pos.Pieces[checkSq], Empty, 0))
 						}
 						break
 					}
-					fmt.Printf("Normal on %s\n", PrintSq(checkSq))
 					list.addQuietMove(pos, Move(sq, checkSq, Empty, Empty, 0))
 					checkSq += direction
 				}
@@ -298,12 +292,10 @@ func (list *SMoveList) GenerateAllMoves(pos *SBoard) error {
 				}
 				if pos.Pieces[checkSq] != Empty {
 					if PieceCol[pos.Pieces[checkSq]] == (pos.Side ^ 1) {
-						fmt.Printf("Capture on %s\n", PrintSq(checkSq))
 						list.addCaptureMove(pos, Move(sq, checkSq, pos.Pieces[checkSq], Empty, 0))
 					}
 					continue
 				}
-				fmt.Printf("Normal on %s\n", PrintSq(checkSq))
 				list.addQuietMove(pos, Move(sq, checkSq, Empty, Empty, 0))
 			}
 		}

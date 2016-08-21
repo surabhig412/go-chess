@@ -410,6 +410,14 @@ func Test() {
 	(&board).Print()
 	(&movelist).GenerateAllMoves(&board)
 
+	fmt.Println("Testing move generation list:")
+	err = ParseFEN("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1", &board)
+	if err != nil {
+		fmt.Println("Error: ", err)
+	}
+	(&board).Print()
+	(&movelist).GenerateAllMoves(&board)
+	(&movelist).Print()
 }
 
 func printSqAttacked(side int, pos SBoard) {

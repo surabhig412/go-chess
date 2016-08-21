@@ -1,9 +1,6 @@
 package main
 
-import (
-	"fmt"
-	"strconv"
-)
+import "strconv"
 
 // PrintSq prints the algebraic notation of particular square
 func PrintSq(sq int) string {
@@ -23,7 +20,6 @@ func PrintMove(move int) string {
 	rankTo := RanksBrd[ToSq(move)]
 
 	promoted := Promoted(move)
-	fmt.Println("Promoted: ", promoted)
 	if promoted > 0 {
 		promotedPiece := "q"
 		if IsKn(promoted) == True {
