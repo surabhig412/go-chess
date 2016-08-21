@@ -379,6 +379,37 @@ func Test() {
 	(&board).Print()
 	(&movelist).GenerateAllMoves(&board)
 
+	fmt.Println("Testing moves in black side castling position:")
+	err = ParseFEN("r3k2r/8/8/8/8/8/8/R3K2R b KQkq - 0 1", &board)
+	if err != nil {
+		fmt.Println("Error: ", err)
+	}
+	(&board).Print()
+	(&movelist).GenerateAllMoves(&board)
+
+	fmt.Println("Testing moves in white side castling position:")
+	err = ParseFEN("r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1", &board)
+	if err != nil {
+		fmt.Println("Error: ", err)
+	}
+	(&movelist).GenerateAllMoves(&board)
+
+	fmt.Println("Testing moves in white side castling position when intermediate squares are attacked:")
+	err = ParseFEN("3rk2r/8/8/8/8/8/6p1/R3K2R w KQk - 0 1", &board)
+	if err != nil {
+		fmt.Println("Error: ", err)
+	}
+	(&board).Print()
+	(&movelist).GenerateAllMoves(&board)
+
+	fmt.Println("Testing moves in black side castling position when a piece has been moved:")
+	err = ParseFEN("3rk2r/8/8/8/8/8/6p1/R3K2R b KQk - 0 1", &board)
+	if err != nil {
+		fmt.Println("Error: ", err)
+	}
+	(&board).Print()
+	(&movelist).GenerateAllMoves(&board)
+
 }
 
 func printSqAttacked(side int, pos SBoard) {

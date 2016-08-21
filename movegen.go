@@ -119,8 +119,9 @@ func (list *SMoveList) GenerateAllMoves(pos *SBoard) error {
 		return err
 	}
 	list.count = 0
-	// Generating possible moves for white and black pawns
+
 	if pos.Side == White {
+		// Generating possible moves for white pawn
 		for pieceNum := 0; pieceNum < pos.PceNum[Wp]; pieceNum++ {
 			sq := pos.PList[Wp][pieceNum]
 			if !SqOnBoard(sq) {
@@ -154,7 +155,33 @@ func (list *SMoveList) GenerateAllMoves(pos *SBoard) error {
 				list.addCaptureMove(pos, Move(sq, sq+11, Empty, Empty, MFlagEP))
 			}
 		}
+
+		// Castling
+
+		if (pos.CastlePerm & Wkca) > 0 {
+			if pos.Pieces[F1] == Empty && pos.Pieces[G1] == Empty {
+				resE1, _ := SqAttacked(E1, Black, pos)
+				resF1, _ := SqAttacked(F1, Black, pos)
+				if !resE1 && !resF1 {
+					fmt.Println("WKCA move generated")
+					list.addQuietMove(pos, Move(E1, G1, Empty, Empty, MFlagCA))
+				}
+			}
+		}
+
+		if (pos.CastlePerm & Wqca) > 0 {
+			if pos.Pieces[D1] == Empty && pos.Pieces[C1] == Empty && pos.Pieces[B1] == Empty {
+				resE1, _ := SqAttacked(E1, Black, pos)
+				resD1, _ := SqAttacked(D1, Black, pos)
+				if !resE1 && !resD1 {
+					fmt.Println("WQCA move generated")
+					list.addQuietMove(pos, Move(E1, C1, Empty, Empty, MFlagCA))
+				}
+			}
+		}
+
 	} else {
+		// Generating possible moves for black pawns
 		for pieceNum := 0; pieceNum < pos.PceNum[Bp]; pieceNum++ {
 			sq := pos.PList[Bp][pieceNum]
 			if !SqOnBoard(sq) {
@@ -188,6 +215,30 @@ func (list *SMoveList) GenerateAllMoves(pos *SBoard) error {
 				list.addCaptureMove(pos, Move(sq, sq-11, Empty, Empty, MFlagEP))
 			}
 		}
+
+		// Castling
+		if (pos.CastlePerm & Bkca) > 0 {
+			if pos.Pieces[F8] == Empty && pos.Pieces[G8] == Empty {
+				resE8, _ := SqAttacked(E8, White, pos)
+				resF8, _ := SqAttacked(F8, White, pos)
+				if !resE8 && !resF8 {
+					fmt.Println("BKCA move generated")
+					list.addQuietMove(pos, Move(E8, G8, Empty, Empty, MFlagCA))
+				}
+			}
+		}
+
+		if (pos.CastlePerm & Bqca) > 0 {
+			if pos.Pieces[D8] == Empty && pos.Pieces[C8] == Empty && pos.Pieces[B8] == Empty {
+				resE8, _ := SqAttacked(E8, White, pos)
+				resD8, _ := SqAttacked(D8, White, pos)
+				if !resE8 && !resD8 {
+					fmt.Println("BQCA move generated")
+					list.addQuietMove(pos, Move(E8, C8, Empty, Empty, MFlagCA))
+				}
+			}
+		}
+
 	}
 
 	// Loop for sliding pieces
