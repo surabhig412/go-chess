@@ -47,23 +47,23 @@ func IsKi(piece int) int {
 }
 
 // FromSq returns value of from-square where move has been done
-func FromSq(num int) int {
-	return (num & 0x7F)
+func FromSq(move int) int {
+	return (move & 0x7F)
 }
 
 // ToSq returns value of to-square where move has been done
-func ToSq(num int) int {
-	return ((num >> 7) & 0x7F)
+func ToSq(move int) int {
+	return ((move >> 7) & 0x7F)
 }
 
 // Captured returns value of pieces captured in the move
-func Captured(num int) int {
-	return ((num >> 14) & 0xF)
+func Captured(move int) int {
+	return ((move >> 14) & 0xF)
 }
 
 // Promoted returns value of pieces promoted in the move
-func Promoted(num int) int {
-	return ((num >> 20) & 0xF)
+func Promoted(move int) int {
+	return ((move >> 20) & 0xF)
 }
 
 // Move creates move with all possible parameters

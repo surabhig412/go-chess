@@ -4,6 +4,7 @@ import "errors"
 
 // ClearPiece clears the piece when making a move
 func ClearPiece(sq int, pos *SBoard) error {
+	targetPceNum := -1
 	if !SqOnBoard(sq) {
 		return errors.New("Square to be cleared is not on board")
 	}
@@ -20,7 +21,6 @@ func ClearPiece(sq int, pos *SBoard) error {
 	if !SideValid(colour) {
 		return errors.New("Side is invalid")
 	}
-	targetPceNum := -1
 
 	// Hash out hash key of piece from PosKey
 	pos.PosKey ^= PieceKeys[piece][sq]
@@ -82,7 +82,7 @@ func AddPiece(sq, piece int, pos *SBoard) error {
 		return errors.New("Side is invalid")
 	}
 
-	// Hash out hash key of piece from PosKey
+	// Hash in hash key of piece into PosKey
 	pos.PosKey ^= PieceKeys[piece][sq]
 
 	// Add values for the piece to arrays representing the board
@@ -167,4 +167,132 @@ func MovePiece(from, to int, pos *SBoard) error {
 	}
 
 	return nil
+}
+
+func MakeMove(move int, pos *SBoard) (bool, error) {
+	err := pos.Check()
+	if err != nil {
+		return false, err
+	}
+
+	fromSq := FromSq(move)
+	toSq := ToSq(move)
+	side := pos.Side
+	capturedPiece := Captured(move)
+	promotedPiece := Promoted(move)
+
+	if !SqOnBoard(fromSq) {
+		return false, errors.New("Square from where piece is to be moved is not on board")
+	}
+	if !SqOnBoard(toSq) {
+		return false, errors.New("Square where piece is to be moved is not on board")
+	}
+	if !SideValid(side) {
+		return false, errors.New("Side is invalid")
+	}
+	if !PieceValid(pos.Pieces[fromSq]) {
+		return false, errors.New("Piece to be added is invalid")
+	}
+
+	pos.History[pos.HisPly].PosKey = pos.PosKey
+	if (move & MFlagEP) == 1 {
+		if side == White {
+			ClearPiece(toSq-10, pos)
+		} else {
+			ClearPiece(toSq+10, pos)
+		}
+	} else if (move & MFlagCA) == 1 {
+		switch toSq {
+		case C1:
+			MovePiece(A1, D1, pos)
+			break
+		case C8:
+			MovePiece(A8, D8, pos)
+			break
+		case G1:
+			MovePiece(H1, F1, pos)
+			break
+		case G8:
+			MovePiece(H8, F8, pos)
+			break
+		default:
+			return false, errors.New("Error in move")
+		}
+	}
+
+	if pos.EnPas != NoSq {
+		// Hash in hash key of enPas piece into PosKey
+		pos.PosKey ^= PieceKeys[Empty][pos.EnPas]
+	}
+	// Hash out hash key of castling from PosKey
+	pos.PosKey ^= CastleKeys[pos.CastlePerm]
+
+	pos.History[pos.HisPly].Move = move
+	pos.History[pos.HisPly].FiftyMove = pos.FiftyMove
+	pos.History[pos.HisPly].EnPas = pos.EnPas
+	pos.History[pos.HisPly].CastlePerm = pos.CastlePerm
+	pos.CastlePerm &= CastlePerm[fromSq]
+	pos.CastlePerm &= CastlePerm[toSq]
+	pos.EnPas = NoSq
+	pos.FiftyMove++
+	pos.HisPly++
+	pos.Ply++
+	// Hash in hash key of castling into PosKey
+	pos.PosKey ^= CastleKeys[pos.CastlePerm]
+
+	if capturedPiece != Empty {
+		if !PieceValid(capturedPiece) {
+			return false, errors.New("Piece to be captured is invalid")
+		}
+		ClearPiece(toSq, pos)
+		pos.FiftyMove = 0
+	}
+
+	if PiecePawn[pos.Pieces[fromSq]] == True {
+		pos.FiftyMove = 0
+		if (move & MFlagPS) == 1 {
+			if side == White {
+				pos.EnPas = fromSq + 10
+				if RanksBrd[pos.EnPas] != Rank3 {
+					return false, errors.New("Rank of enPas should be rank 3")
+				}
+			} else {
+				pos.EnPas = fromSq - 10
+				if RanksBrd[pos.EnPas] != Rank6 {
+					return false, errors.New("Rank of enPas should be rank 6")
+				}
+			}
+			// Hash in hash key of enPas piece into PosKey
+			pos.PosKey ^= PieceKeys[Empty][pos.EnPas]
+		}
+	}
+
+	MovePiece(fromSq, toSq, pos)
+
+	if promotedPiece != Empty {
+		if !PieceValid(promotedPiece) || PiecePawn[promotedPiece] == True {
+			return false, errors.New("Piece to be promoted is invalid")
+		}
+		ClearPiece(toSq, pos)
+		AddPiece(toSq, promotedPiece, pos)
+	}
+
+	if PieceKing[pos.Pieces[toSq]] == True {
+		pos.KingSq[pos.Side] = toSq
+	}
+
+	pos.Side ^= 1
+	pos.PosKey ^= SideKey
+
+	err = pos.Check()
+	if err != nil {
+		return false, err
+	}
+
+	if attacked, _ := SqAttacked(pos.KingSq[side], pos.Side, pos); attacked {
+		// TakeMove(pos)
+		return false, errors.New("Move taken back as King will be attacked by the move")
+	}
+
+	return true, nil
 }

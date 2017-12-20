@@ -84,6 +84,9 @@ var BiDir = [4]int{-9, -11, 11, 9}
 // KiDir represents possible directions in which king can move
 var KiDir = [8]int{-1, -10, 1, 10, -9, -11, 11, 9}
 
+// PiecePawn is used to find out if a piece is pawn or not
+var PiecePawn = [13]int{False, True, False, False, False, False, False, True, False, False, False, False, False}
+
 // PieceKnight is used to find out if a piece is knight or not
 var PieceKnight = [13]int{False, False, True, False, False, False, False, False, True, False, False, False, False}
 
@@ -125,7 +128,7 @@ const (
 	MFlagEP   int = 0x40000   // EnPas bit
 	MFlagPS   int = 0x80000   // PawnStart move
 	MFlagCA   int = 0x1000000 // Castling move
-	MFlagCAP  int = 0x7C000   // Captured piece move
+	MFlagCAP  int = 0x7C000   // Captured piece move(including ep capture)
 	MFlagPROM int = 0xF00000  // Promoted piece move
 )
 

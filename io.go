@@ -4,12 +4,7 @@ import "strconv"
 
 // PrintSq prints the algebraic notation of particular square
 func PrintSq(sq int) string {
-	file := FilesBrd[sq]
-	rank := RanksBrd[sq]
-
-	algebraicSq := string(rune(97+file)) + strconv.Itoa(rank+1)
-
-	return algebraicSq
+	return string(rune(97+FilesBrd[sq])) + strconv.Itoa(RanksBrd[sq]+1)
 }
 
 // PrintMove prints full move with promoted square

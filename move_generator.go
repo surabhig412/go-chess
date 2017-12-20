@@ -5,6 +5,15 @@ import (
 	"fmt"
 )
 
+/* Game Move
+0000 0000 0000 0000 0000 0111 1111 -> From 0x7F
+0000 0000 0000 0011 1111 1000 0000 -> To >> 7, 0x7F
+0000 0000 0011 1100 0000 0000 0000 -> Captured >> 14, 0xF
+0000 0000 0100 0000 0000 0000 0000 -> EP & 0x40000
+0000 0000 1000 0000 0000 0000 0000 -> Pawn start & 0x80000
+0000 1111 0000 0000 0000 0000 0000 -> Promoted Piece >> 20, 0xF
+0001 0000 0000 0000 0000 0000 0000 -> Castle & 0x1000000
+*/
 // SMove defines the structure of each move
 type SMove struct {
 	move  int
@@ -244,13 +253,13 @@ func (list *SMoveList) GenerateAllMoves(pos *SBoard) error {
 		if !PieceValid(piece) {
 			return errors.New("Piece is not valid")
 		}
-		fmt.Printf("sliders piece index: %d piece:%d \n", pieceIndex, piece)
+		// fmt.Printf("sliders piece index: %d piece:%d \n", pieceIndex, piece)
 		for pieceNum := 0; pieceNum < pos.PceNum[piece]; pieceNum++ {
 			sq := pos.PList[piece][pieceNum]
 			if !SqOnBoard(sq) {
 				return errors.New("Square is not on board")
 			}
-			fmt.Printf("Piece: %c on %s \n", PceChar[piece], PrintSq(sq))
+			// fmt.Printf("Piece: %c on %s \n", PceChar[piece], PrintSq(sq))
 			for index := 0; index < NumDir[piece]; index++ {
 				direction := PieceDir[piece][index]
 				checkSq := sq + direction
@@ -277,13 +286,13 @@ func (list *SMoveList) GenerateAllMoves(pos *SBoard) error {
 		if !PieceValid(piece) {
 			return errors.New("Piece is not valid")
 		}
-		fmt.Printf("non sliders piece index: %d piece: %d \n", pieceIndex, piece)
+		// fmt.Printf("non sliders piece index: %d piece: %d \n", pieceIndex, piece)
 		for pieceNum := 0; pieceNum < pos.PceNum[piece]; pieceNum++ {
 			sq := pos.PList[piece][pieceNum]
 			if !SqOnBoard(sq) {
 				return errors.New("Square is not on board")
 			}
-			fmt.Printf("Piece: %c on %s \n", PceChar[piece], PrintSq(sq))
+			// fmt.Printf("Piece: %c on %s \n", PceChar[piece], PrintSq(sq))
 			for index := 0; index < NumDir[piece]; index++ {
 				direction := PieceDir[piece][index]
 				checkSq := sq + direction

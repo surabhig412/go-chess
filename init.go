@@ -48,22 +48,22 @@ func initHashKeys() {
 }
 
 // initFilesRankBrd initializes files and ranks arrays with their respective file and ranks
-
 func initFilesRankBrd() {
 	for index := 0; index < BrdSqNum; index++ {
 		FilesBrd[index] = Offboard
 		RanksBrd[index] = Offboard
+	}
 
-		for rank := Rank1; rank <= Rank8; rank++ {
-			for file := FileA; file <= FileH; file++ {
-				sq := FR2SQ(file, rank)
-				FilesBrd[sq] = file
-				RanksBrd[sq] = rank
-			}
+	for rank := Rank1; rank <= Rank8; rank++ {
+		for file := FileA; file <= FileH; file++ {
+			sq := FR2SQ(file, rank)
+			FilesBrd[sq] = file
+			RanksBrd[sq] = rank
 		}
 	}
 }
 
+// initCastlePermission initializes CastlePerm array with castling permission values
 func initCastlePermission() {
 	for index := 0; index < BrdSqNum; index++ {
 		CastlePerm[index] = 15

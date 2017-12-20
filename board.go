@@ -18,12 +18,12 @@ type SBoard struct {
 	HisPly     int           // History of ply- highest number of moves played in game
 	PosKey     uint64        // value of hashing piece, side, enPas and castle values
 	PceNum     [13]int       // Total number of respective pieces on the board
-	BigPce     [2]int        // index 0 represents number of big pieces on white side and index 1 of black side
-	MajPce     [2]int        // index 0 represents number of major pieces on white side and index 1 of black side
-	MinPce     [2]int        // index 0 represents number of minor pieces on white side and index 1 of black side
+	BigPce     [2]int        // index 0 represents number of big pieces(anything other than pawn) on white side and index 1 of black side
+	MajPce     [2]int        // index 0 represents number of major pieces(rooks and queen) on white side and index 1 of black side
+	MinPce     [2]int        // index 0 represents number of minor pieces(bishop and knight) on white side and index 1 of black side
 	Material   [2]int        // index 0 represents total value of all pieces on white side and index 1 of black side
 	History    [MaxGameMoves]SUndo
-	PList      [13][10]int //piece list
+	PList      [13][10]int //piece list(10(maxm number of pieces of a particular piece) - there can be atmost 10 rooks on the board at a time)
 }
 
 // Print prints the entire chess board
