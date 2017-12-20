@@ -221,7 +221,7 @@ func MakeMove(move int, pos *SBoard) (bool, error) {
 	}
 
 	if pos.EnPas != NoSq {
-		// Hash in hash key of enPas piece into PosKey
+		// Hash out hash key of enPas piece from PosKey
 		pos.PosKey ^= PieceKeys[Empty][pos.EnPas]
 	}
 	// Hash out hash key of castling from PosKey
@@ -290,9 +290,102 @@ func MakeMove(move int, pos *SBoard) (bool, error) {
 	}
 
 	if attacked, _ := SqAttacked(pos.KingSq[side], pos.Side, pos); attacked {
-		// TakeMove(pos)
+		TakeMove(pos)
 		return false, errors.New("Move taken back as King will be attacked by the move")
 	}
 
 	return true, nil
+}
+
+func TakeMove(pos *SBoard) error {
+	err := pos.Check()
+	if err != nil {
+		return err
+	}
+
+	pos.HisPly--
+	pos.Ply--
+	move := pos.History[pos.HisPly].Move
+	fromSq := FromSq(move)
+	toSq := ToSq(move)
+	capturedPiece := Captured(move)
+	promotedPiece := Promoted(move)
+	if !SqOnBoard(fromSq) {
+		return errors.New("Square from where piece is to be moved is not on board")
+	}
+	if !SqOnBoard(toSq) {
+		return errors.New("Square where piece is to be moved is not on board")
+	}
+	if pos.EnPas != NoSq {
+		// Hash out hash key of enPas piece from PosKey
+		pos.PosKey ^= PieceKeys[Empty][pos.EnPas]
+	}
+	// Hash out hash key of castling from PosKey
+	pos.PosKey ^= CastleKeys[pos.CastlePerm]
+
+	pos.CastlePerm = pos.History[pos.HisPly].CastlePerm
+	pos.FiftyMove = pos.History[pos.HisPly].FiftyMove
+	pos.EnPas = pos.History[pos.HisPly].EnPas
+	if pos.EnPas != NoSq {
+		// Hash in hash key of enPas piece into PosKey
+		pos.PosKey ^= PieceKeys[Empty][pos.EnPas]
+	}
+	// Hash in hash key of castling into PosKey
+	pos.PosKey ^= CastleKeys[pos.CastlePerm]
+	pos.Side ^= 1
+	pos.PosKey ^= SideKey
+
+	if (move & MFlagEP) == 1 {
+		if pos.Side == White {
+			AddPiece(toSq-10, Bp, pos)
+		} else {
+			AddPiece(toSq+10, Wp, pos)
+		}
+	} else if (move & MFlagCA) == 1 {
+		switch toSq {
+		case C1:
+			MovePiece(D1, A1, pos)
+			break
+		case C8:
+			MovePiece(D8, A8, pos)
+			break
+		case G1:
+			MovePiece(F1, H1, pos)
+			break
+		case G8:
+			MovePiece(F8, H8, pos)
+			break
+		default:
+			return errors.New("Error in move")
+		}
+	}
+
+	MovePiece(toSq, fromSq, pos)
+
+	if PieceKing[pos.Pieces[fromSq]] == True {
+		pos.KingSq[pos.Side] = fromSq
+	}
+	if capturedPiece != Empty {
+		if !PieceValid(capturedPiece) {
+			return errors.New("Piece to be captured is invalid")
+		}
+		AddPiece(toSq, capturedPiece, pos)
+	}
+
+	if promotedPiece != Empty {
+		if !PieceValid(promotedPiece) || PiecePawn[promotedPiece] == True {
+			return errors.New("Piece to be promoted is invalid")
+		}
+		ClearPiece(fromSq, pos)
+		if PieceCol[promotedPiece] == White {
+			AddPiece(fromSq, Wp, pos)
+		} else {
+			AddPiece(fromSq, Bp, pos)
+		}
+	}
+	err = pos.Check()
+	if err != nil {
+		return err
+	}
+	return nil
 }
