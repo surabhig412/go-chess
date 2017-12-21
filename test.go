@@ -418,6 +418,27 @@ func Test() {
 	(&board).Print()
 	(&movelist).GenerateAllMoves(&board)
 	(&movelist).Print()
+
+	fmt.Println("Testing make move and take move:")
+	err = ParseFEN(StartFEN, &board)
+	if err != nil {
+		fmt.Println("Error: ", err)
+	}
+	(&board).Print()
+	(&movelist).GenerateAllMoves(&board)
+	(&movelist).Print()
+	for i := 0; i < movelist.count; i++ {
+		moveMade, err := MakeMove(movelist.moves[i].move, &board)
+		if !moveMade {
+			fmt.Println("Error occurred: ", err)
+			continue
+		}
+		fmt.Println("Move made: ", PrintMove(movelist.moves[i].move))
+		board.Print()
+		TakeMove(&board)
+		fmt.Println("Move taken: ", PrintMove(movelist.moves[i].move))
+		board.Print()
+	}
 }
 
 func printSqAttacked(side int, pos SBoard) {

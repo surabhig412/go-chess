@@ -195,13 +195,13 @@ func MakeMove(move int, pos *SBoard) (bool, error) {
 	}
 
 	pos.History[pos.HisPly].PosKey = pos.PosKey
-	if (move & MFlagEP) == 1 {
+	if (move & MFlagEP) > 0 {
 		if side == White {
 			ClearPiece(toSq-10, pos)
 		} else {
 			ClearPiece(toSq+10, pos)
 		}
-	} else if (move & MFlagCA) == 1 {
+	} else if (move & MFlagCA) > 0 {
 		switch toSq {
 		case C1:
 			MovePiece(A1, D1, pos)
@@ -250,7 +250,7 @@ func MakeMove(move int, pos *SBoard) (bool, error) {
 
 	if PiecePawn[pos.Pieces[fromSq]] == True {
 		pos.FiftyMove = 0
-		if (move & MFlagPS) == 1 {
+		if (move & MFlagPS) > 0 {
 			if side == White {
 				pos.EnPas = fromSq + 10
 				if RanksBrd[pos.EnPas] != Rank3 {
@@ -267,7 +267,13 @@ func MakeMove(move int, pos *SBoard) (bool, error) {
 		}
 	}
 
-	MovePiece(fromSq, toSq, pos)
+	pos.Side ^= 1
+	pos.PosKey ^= SideKey
+
+	err = MovePiece(fromSq, toSq, pos)
+	if err != nil {
+		return false, err
+	}
 
 	if promotedPiece != Empty {
 		if !PieceValid(promotedPiece) || PiecePawn[promotedPiece] == True {
@@ -280,9 +286,6 @@ func MakeMove(move int, pos *SBoard) (bool, error) {
 	if PieceKing[pos.Pieces[toSq]] == True {
 		pos.KingSq[pos.Side] = toSq
 	}
-
-	pos.Side ^= 1
-	pos.PosKey ^= SideKey
 
 	err = pos.Check()
 	if err != nil {
@@ -335,13 +338,13 @@ func TakeMove(pos *SBoard) error {
 	pos.Side ^= 1
 	pos.PosKey ^= SideKey
 
-	if (move & MFlagEP) == 1 {
+	if (move & MFlagEP) > 0 {
 		if pos.Side == White {
 			AddPiece(toSq-10, Bp, pos)
 		} else {
 			AddPiece(toSq+10, Wp, pos)
 		}
-	} else if (move & MFlagCA) == 1 {
+	} else if (move & MFlagCA) > 0 {
 		switch toSq {
 		case C1:
 			MovePiece(D1, A1, pos)
