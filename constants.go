@@ -6,6 +6,7 @@ const (
 	MaxGameMoves     = 2048
 	MaxPositionMoves = 256
 	StartFEN         = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+	NoMove           = 0
 )
 
 // Possible values for various fields

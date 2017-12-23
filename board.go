@@ -47,7 +47,11 @@ func (pos *SBoard) Print() {
 	}
 	fmt.Println()
 	fmt.Printf("side:%c\n", SideChar[pos.Side])
-	fmt.Printf("enPas:%d\n", pos.EnPas)
+	if pos.EnPas == NoSq {
+		fmt.Printf("enPas:-\n")
+	} else {
+		fmt.Printf("enPas:%s\n", PrintSq(pos.EnPas))
+	}
 	castling := ""
 	if (pos.CastlePerm & Wkca) == Wkca {
 		castling += "K"
