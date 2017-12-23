@@ -1,8 +1,13 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
+	"log"
+	"os"
+	"regexp"
 	"strconv"
+	"strings"
 )
 
 // Test tests functions of go-chess
@@ -438,6 +443,30 @@ func Test() {
 		TakeMove(&board)
 		fmt.Println("Move taken: ", PrintMove(movelist.moves[i].move))
 		board.Print()
+	}
+
+	fmt.Println("Perft Testing")
+	file, err := os.Open("perftsuite.md")
+	if err != nil {
+		log.Fatal("Error in opening file: ", err)
+	}
+	scanner := bufio.NewScanner(file)
+	re := regexp.MustCompile("[0-9]+")
+	for scanner.Scan() {
+		testArr := strings.Split(scanner.Text(), ";")
+		var board1 SBoard
+		fmt.Println("Fen: ", testArr[0])
+		err = ParseFEN(testArr[0], &board1)
+		if err != nil {
+			fmt.Println("Error in parsing fen: ", err)
+		}
+		for i := 1; i < len(testArr); i++ {
+			testConditionArr := strings.Split(testArr[i], " ")
+			depthArr := re.FindAllString(testConditionArr[0], -1)
+			depth, _ := strconv.Atoi(depthArr[0])
+			PerftTest(depth, &board1)
+			fmt.Println("Expected result: ", testConditionArr[1])
+		}
 	}
 }
 

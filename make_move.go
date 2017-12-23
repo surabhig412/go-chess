@@ -117,10 +117,6 @@ func MovePiece(from, to int, pos *SBoard) error {
 	if !SqOnBoard(to) {
 		return errors.New("Square where piece is to be moved is not on board")
 	}
-	err := pos.Check()
-	if err != nil {
-		return err
-	}
 
 	piece := pos.Pieces[from]
 	if !PieceValid(piece) {
@@ -267,9 +263,6 @@ func MakeMove(move int, pos *SBoard) (bool, error) {
 		}
 	}
 
-	pos.Side ^= 1
-	pos.PosKey ^= SideKey
-
 	err = MovePiece(fromSq, toSq, pos)
 	if err != nil {
 		return false, err
@@ -287,16 +280,17 @@ func MakeMove(move int, pos *SBoard) (bool, error) {
 		pos.KingSq[pos.Side] = toSq
 	}
 
+	pos.Side ^= 1
+	pos.PosKey ^= SideKey
+
 	err = pos.Check()
 	if err != nil {
 		return false, err
 	}
-
 	if attacked, _ := SqAttacked(pos.KingSq[side], pos.Side, pos); attacked {
 		TakeMove(pos)
 		return false, errors.New("Move taken back as King will be attacked by the move")
 	}
-
 	return true, nil
 }
 
