@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"time"
+)
 
 var leafNodes int
 
@@ -28,6 +31,7 @@ func perft(depth int, pos *SBoard) error {
 }
 
 func PerftTest(depth int, pos *SBoard) error {
+	startTime := time.Now()
 	err := pos.Check()
 	if err != nil {
 		return err
@@ -50,6 +54,7 @@ func PerftTest(depth int, pos *SBoard) error {
 		oldNodes := leafNodes - cumulativeNodes
 		fmt.Printf("Move %d: %s : %d \n", i+1, PrintMove(move), oldNodes)
 	}
-	fmt.Printf("Test complete: %d nodes visited \n", leafNodes)
+	elapsedTime := time.Since(startTime)
+	fmt.Printf("Test complete: %d nodes visited in time %v\n", leafNodes, elapsedTime)
 	return nil
 }

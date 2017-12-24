@@ -22,9 +22,10 @@ func main() {
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {
 		command := scanner.Text()
-		if command == "q" {
-			break
-		} else if command == "t" {
+		switch command {
+		case "q":
+			os.Exit(1)
+		case "t":
 			if board.Ply == 0 {
 				fmt.Println("There are no moves made on the board")
 			} else {
@@ -35,7 +36,10 @@ func main() {
 				board.Print()
 			}
 			fmt.Printf("Please enter a move > ")
-		} else {
+		case "p":
+			PerftTest(3, &board)
+			fmt.Printf("Please enter a move > ")
+		default:
 			move, err := ParseMove(strings.ToLower(command), &board)
 			if err != nil {
 				fmt.Errorf("Error in parsing move", err)
@@ -45,9 +49,12 @@ func main() {
 				if err != nil {
 					fmt.Errorf("Error in making move", err)
 				}
+			} else {
+				fmt.Println("Move not parsed")
 			}
 			board.Print()
 			fmt.Printf("Please enter a move > ")
 		}
+
 	}
 }

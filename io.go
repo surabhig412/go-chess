@@ -2,7 +2,6 @@ package main
 
 import (
 	"errors"
-	"fmt"
 	"regexp"
 	"strconv"
 )
@@ -43,7 +42,6 @@ func ParseMove(algebraicMove string, pos *SBoard) (int, error) {
 	}
 	fromSq := FR2SQ(int(algebraicMove[0])-97, int(algebraicMove[1])-49)
 	toSq := FR2SQ(int(algebraicMove[2])-97, int(algebraicMove[3])-49)
-	fmt.Printf("Algebraic move: %s, from %d to %d\n", algebraicMove, fromSq, toSq)
 
 	if !SqOnBoard(fromSq) {
 		return NoMove, errors.New("Square from where piece is to be moved is not on board")
