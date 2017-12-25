@@ -37,6 +37,23 @@ func (list *SMoveList) Print() {
 	fmt.Printf("MoveList Total %d moves:\n", list.count)
 }
 
+// MoveExists checks if move is a valid move on the current state of the board
+func MoveExists(pos *SBoard, move int) bool {
+	var list SMoveList
+	list.GenerateAllMoves(pos)
+	for i := 0; i < list.count; i++ {
+		moveMade, _ := MakeMove(list.moves[i].move, pos)
+		if !moveMade {
+			continue
+		}
+		TakeMove(pos)
+		if list.moves[i].move == move {
+			return true
+		}
+	}
+	return false
+}
+
 // addQuietMove to move list
 func (list *SMoveList) addQuietMove(pos *SBoard, move int) {
 	list.moves[list.count].move = move

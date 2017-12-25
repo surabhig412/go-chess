@@ -21,7 +21,6 @@ func perft(depth int, pos *SBoard) error {
 	for i := 0; i < list.count; i++ {
 		moveMade, _ := MakeMove(list.moves[i].move, pos)
 		if !moveMade {
-			// fmt.Println("movenum, Move, error: ", i, list.moves[i].move, err)
 			continue
 		}
 		perft(depth-1, pos)

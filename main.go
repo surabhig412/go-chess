@@ -18,6 +18,7 @@ func main() {
 		fmt.Println("Error in parsing fen: ", err)
 	}
 	board.Print()
+	(&board).PvTable.Init()
 	fmt.Printf("Please enter a move > ")
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {
@@ -39,12 +40,20 @@ func main() {
 		case "p":
 			PerftTest(3, &board)
 			fmt.Printf("Please enter a move > ")
+		case "pv":
+			count, _ := GetPvLine(4, &board)
+			for i := 0; i < count; i++ {
+				move := board.PvArray[i]
+				fmt.Println(PrintMove(move))
+			}
+			fmt.Printf("Please enter a move > ")
 		default:
 			move, err := ParseMove(strings.ToLower(command), &board)
 			if err != nil {
 				fmt.Errorf("Error in parsing move", err)
 			}
 			if move != NoMove {
+				StorePvMove(&board, move)
 				_, err = MakeMove(move, &board)
 				if err != nil {
 					fmt.Errorf("Error in making move", err)

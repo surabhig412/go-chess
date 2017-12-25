@@ -24,6 +24,8 @@ type SBoard struct {
 	Material   [2]int        // index 0 represents total value of all pieces on white side and index 1 of black side
 	History    [MaxGameMoves]SUndo
 	PList      [13][10]int //piece list(10(maxm number of pieces of a particular piece) - there can be atmost 10 rooks on the board at a time)
+	PvTable    SPvTable    // principal variation table contains all important moves of the game
+	PvArray    [MaxDepth]int
 }
 
 // Print prints the entire chess board

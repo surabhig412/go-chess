@@ -7,6 +7,8 @@ const (
 	MaxPositionMoves = 256
 	StartFEN         = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 	NoMove           = 0
+	PvSize           = 0x100000 * 2
+	MaxDepth         = 64
 )
 
 // Possible values for various fields
