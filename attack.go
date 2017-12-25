@@ -3,7 +3,7 @@ package main
 import "errors"
 
 // SqAttacked evaluates if a particular square(sq) is attacked by opposing side(side) or not
-func SqAttacked(sq, side int, pos *SBoard) (bool, error) {
+func SqAttacked(sq, side int, pos *Board) (bool, error) {
 	// check if square, side and position of board is valid or not
 	if !SqOnBoard(sq) {
 		return false, errors.New("Square is not on board")

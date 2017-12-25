@@ -34,8 +34,8 @@ func PrintMove(move int) string {
 }
 
 // ParseMove converts algebraic move to its corresponding integer format
-func ParseMove(algebraicMove string, pos *SBoard) (int, error) {
-	var list SMoveList
+func ParseMove(algebraicMove string, pos *Board) (int, error) {
+	var list MoveList
 	re := regexp.MustCompile("[a-h][1-8][a-h][1-8][qnrb]?")
 	if !re.MatchString(algebraicMove) {
 		return NoMove, errors.New("Invalid move provided")

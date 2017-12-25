@@ -3,7 +3,7 @@ package main
 import "log"
 
 // GeneratePosKey generates posKey of the board
-func GeneratePosKey(pos *SBoard) uint64 {
+func GeneratePosKey(pos *Board) uint64 {
 	piece := Empty
 	var finalKey uint64
 	// Include hash key of each piece on the board

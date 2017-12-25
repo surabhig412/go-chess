@@ -12,7 +12,7 @@ func main() {
 	AllInit()
 	// Test()
 	fmt.Println("Let us play chess!")
-	var board SBoard
+	var board Board
 	err := ParseFEN(StartFEN, &board)
 	if err != nil {
 		fmt.Println("Error in parsing fen: ", err)

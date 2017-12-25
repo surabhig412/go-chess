@@ -3,7 +3,7 @@ package main
 import "errors"
 
 // ClearPiece clears the piece when making a move
-func ClearPiece(sq int, pos *SBoard) error {
+func ClearPiece(sq int, pos *Board) error {
 	targetPceNum := -1
 	if !SqOnBoard(sq) {
 		return errors.New("Square to be cleared is not on board")
@@ -65,7 +65,7 @@ func ClearPiece(sq int, pos *SBoard) error {
 }
 
 // AddPiece adds the piece when making a move
-func AddPiece(sq, piece int, pos *SBoard) error {
+func AddPiece(sq, piece int, pos *Board) error {
 	if !SqOnBoard(sq) {
 		return errors.New("Square where piece is to be added is not on board")
 	}
@@ -110,7 +110,7 @@ func AddPiece(sq, piece int, pos *SBoard) error {
 }
 
 // MovePiece moves the piece from "from" sq to "to" sq on the board
-func MovePiece(from, to int, pos *SBoard) error {
+func MovePiece(from, to int, pos *Board) error {
 	if !SqOnBoard(from) {
 		return errors.New("Square from where piece is to be moved is not on board")
 	}
@@ -165,7 +165,7 @@ func MovePiece(from, to int, pos *SBoard) error {
 	return nil
 }
 
-func MakeMove(move int, pos *SBoard) (bool, error) {
+func MakeMove(move int, pos *Board) (bool, error) {
 	err := pos.Check()
 	if err != nil {
 		return false, err
@@ -294,7 +294,7 @@ func MakeMove(move int, pos *SBoard) (bool, error) {
 	return true, nil
 }
 
-func TakeMove(pos *SBoard) error {
+func TakeMove(pos *Board) error {
 	err := pos.Check()
 	if err != nil {
 		return err

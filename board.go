@@ -5,8 +5,8 @@ import (
 	"fmt"
 )
 
-// SBoard is board structure
-type SBoard struct {
+// Board is board structure
+type Board struct {
 	Pieces     [BrdSqNum]int //all pieces on 120 board
 	Pawns      [3]uint64     // 64 bit structure of white, black and both pawns
 	KingSq     [2]int        // Positions of white, black and both kings
@@ -22,14 +22,14 @@ type SBoard struct {
 	MajPce     [2]int        // index 0 represents number of major pieces(rooks and queen) on white side and index 1 of black side
 	MinPce     [2]int        // index 0 represents number of minor pieces(bishop and knight) on white side and index 1 of black side
 	Material   [2]int        // index 0 represents total value of all pieces on white side and index 1 of black side
-	History    [MaxGameMoves]SUndo
+	History    [MaxGameMoves]Undo
 	PList      [13][10]int //piece list(10(maxm number of pieces of a particular piece) - there can be atmost 10 rooks on the board at a time)
-	PvTable    SPvTable    // principal variation table contains all important moves of the game
+	PvTable    PvTable     // principal variation table contains all important moves of the game
 	PvArray    [MaxDepth]int
 }
 
 // Print prints the entire chess board
-func (pos *SBoard) Print() {
+func (pos *Board) Print() {
 
 	fmt.Println("\nGame Board:")
 
@@ -80,7 +80,7 @@ func (pos *SBoard) Print() {
 }
 
 // Reset resets the chess board
-func (pos *SBoard) Reset() {
+func (pos *Board) Reset() {
 	for index := 0; index < BrdSqNum; index++ {
 		pos.Pieces[index] = Offboard
 	}
@@ -114,7 +114,7 @@ func (pos *SBoard) Reset() {
 }
 
 // UpdateListsMaterial updates various arrays based on the piece on board
-func (pos *SBoard) UpdateListsMaterial() {
+func (pos *Board) UpdateListsMaterial() {
 	for index := 0; index < BrdSqNum; index++ {
 		piece := pos.Pieces[index]
 		if piece != Offboard && piece != Empty {
@@ -157,7 +157,7 @@ func (pos *SBoard) UpdateListsMaterial() {
 }
 
 // Check cross-checks if all pieces are placed properly
-func (pos *SBoard) Check() error {
+func (pos *Board) Check() error {
 	var tempPceNumArr = [13]int{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
 	var tempBigPceArr = [2]int{0, 0}
 	var tempMajPceArr = [2]int{0, 0}

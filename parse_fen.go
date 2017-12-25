@@ -8,7 +8,7 @@ import (
 )
 
 // ParseFEN parses FEN notation
-func ParseFEN(fen string, pos *SBoard) error {
+func ParseFEN(fen string, pos *Board) error {
 	if len(fen) <= 0 || pos == nil {
 		log.Fatalln("FEN or board structure is invalid")
 	}

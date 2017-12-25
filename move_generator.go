@@ -14,20 +14,20 @@ import (
 0000 1111 0000 0000 0000 0000 0000 -> Promoted Piece >> 20, 0xF
 0001 0000 0000 0000 0000 0000 0000 -> Castle & 0x1000000
 */
-// SMove defines the structure of each move
-type SMove struct {
+// Move defines the structure of each move
+type MoveEntity struct {
 	move  int
 	score int
 }
 
-// SMoveList is the list of all moves
-type SMoveList struct {
-	moves [MaxPositionMoves]SMove
+// MoveList is the list of all moves
+type MoveList struct {
+	moves [MaxPositionMoves]MoveEntity
 	count int
 }
 
 // Print prints the movelist
-func (list *SMoveList) Print() {
+func (list *MoveList) Print() {
 	fmt.Println("MoveList: ", list.count)
 	for index := 0; index < list.count; index++ {
 		move := list.moves[index].move
@@ -38,8 +38,8 @@ func (list *SMoveList) Print() {
 }
 
 // MoveExists checks if move is a valid move on the current state of the board
-func MoveExists(pos *SBoard, move int) bool {
-	var list SMoveList
+func MoveExists(pos *Board, move int) bool {
+	var list MoveList
 	list.GenerateAllMoves(pos)
 	for i := 0; i < list.count; i++ {
 		moveMade, _ := MakeMove(list.moves[i].move, pos)
@@ -55,28 +55,28 @@ func MoveExists(pos *SBoard, move int) bool {
 }
 
 // addQuietMove to move list
-func (list *SMoveList) addQuietMove(pos *SBoard, move int) {
+func (list *MoveList) addQuietMove(pos *Board, move int) {
 	list.moves[list.count].move = move
 	list.moves[list.count].score = 0
 	list.count++
 }
 
 // addCaptureMove to move list
-func (list *SMoveList) addCaptureMove(pos *SBoard, move int) {
+func (list *MoveList) addCaptureMove(pos *Board, move int) {
 	list.moves[list.count].move = move
 	list.moves[list.count].score = 0
 	list.count++
 }
 
 // addEnPassantMove to move list
-func (list *SMoveList) addEnPassantMove(pos *SBoard, move int) {
+func (list *MoveList) addEnPassantMove(pos *Board, move int) {
 	list.moves[list.count].move = move
 	list.moves[list.count].score = 0
 	list.count++
 }
 
 // addPawnCaptureMove are possible capture moves of pawn
-func (list *SMoveList) addPawnCaptureMove(pos *SBoard, from, to, capture, side int) error {
+func (list *MoveList) addPawnCaptureMove(pos *Board, from, to, capture, side int) error {
 	if !PieceValidEmpty(capture) {
 		return errors.New("Capture piece is not valid")
 	}
@@ -109,7 +109,7 @@ func (list *SMoveList) addPawnCaptureMove(pos *SBoard, from, to, capture, side i
 }
 
 // addPawnMove are possible quiet moves of pawn
-func (list *SMoveList) addPawnMove(pos *SBoard, from, to, side int) error {
+func (list *MoveList) addPawnMove(pos *Board, from, to, side int) error {
 	if !SqOnBoard(from) {
 		return errors.New("From square is not on board")
 	}
@@ -139,7 +139,7 @@ func (list *SMoveList) addPawnMove(pos *SBoard, from, to, side int) error {
 }
 
 // GenerateAllMoves will generate all possible moves of board
-func (list *SMoveList) GenerateAllMoves(pos *SBoard) error {
+func (list *MoveList) GenerateAllMoves(pos *Board) error {
 	err := pos.Check()
 	if err != nil {
 		return err

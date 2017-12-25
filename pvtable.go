@@ -6,33 +6,33 @@ import (
 	"unsafe"
 )
 
-type SPvEntry struct {
+type PvEntry struct {
 	PosKey uint64
 	Move   int
 }
 
-type SPvTable struct {
-	PTable     []*SPvEntry
+type PvTable struct {
+	PTable     []*PvEntry
 	NumEntries int
 }
 
-func (pvt *SPvTable) Clear() {
+func (pvt *PvTable) Clear() {
 	for i := 0; i < pvt.NumEntries; i++ {
-		pvEntry := new(SPvEntry)
+		pvEntry := new(PvEntry)
 		pvEntry.PosKey = 0
 		pvEntry.Move = NoMove
 		pvt.PTable = append(pvt.PTable, pvEntry)
 	}
 }
 
-func (pvt *SPvTable) Init() {
-	var pvEntry SPvEntry
+func (pvt *PvTable) Init() {
+	var pvEntry PvEntry
 	pvt.NumEntries = PvSize/int(unsafe.Sizeof(pvEntry)) - 2
 	pvt.PTable = nil
 	pvt.Clear()
 }
 
-func GetPvLine(depth int, pos *SBoard) (int, error) {
+func GetPvLine(depth int, pos *Board) (int, error) {
 	if depth >= MaxDepth {
 		return 0, errors.New(fmt.Sprintf("Depth can't be more than %d", MaxDepth))
 	}
@@ -65,7 +65,7 @@ func GetPvLine(depth int, pos *SBoard) (int, error) {
 }
 
 // StorePvMove stores the move in the PV table of the board
-func StorePvMove(pos *SBoard, move int) error {
+func StorePvMove(pos *Board, move int) error {
 	index := pos.PosKey % uint64(pos.PvTable.NumEntries)
 	if index < 0 || index > uint64(pos.PvTable.NumEntries-1) {
 		return errors.New("Index where PV move is to be stored is invalid")
@@ -76,7 +76,7 @@ func StorePvMove(pos *SBoard, move int) error {
 }
 
 // ProbePvTable searches for the most significant move on the board based on its pv
-func ProbePvTable(pos *SBoard) (int, error) {
+func ProbePvTable(pos *Board) (int, error) {
 	index := pos.PosKey % uint64(pos.PvTable.NumEntries)
 	if index < 0 || index > uint64(pos.PvTable.NumEntries-1) {
 		return NoMove, errors.New("Index where PV move is to be probed from is invalid")

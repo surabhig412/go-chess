@@ -1,7 +1,7 @@
 package main
 
-// SUndo is the structure of Undo when a step is undone
-type SUndo struct {
+// Undo is the structure of Undo when a step is undone
+type Undo struct {
 	Move       int
 	CastlePerm int
 	EnPas      int

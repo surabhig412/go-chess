@@ -7,7 +7,7 @@ import (
 
 var leafNodes int
 
-func perft(depth int, pos *SBoard) error {
+func perft(depth int, pos *Board) error {
 	err := pos.Check()
 	if err != nil {
 		return err
@@ -16,7 +16,7 @@ func perft(depth int, pos *SBoard) error {
 		leafNodes++
 		return nil
 	}
-	var list SMoveList
+	var list MoveList
 	list.GenerateAllMoves(pos)
 	for i := 0; i < list.count; i++ {
 		moveMade, _ := MakeMove(list.moves[i].move, pos)
@@ -29,7 +29,7 @@ func perft(depth int, pos *SBoard) error {
 	return nil
 }
 
-func PerftTest(depth int, pos *SBoard) error {
+func PerftTest(depth int, pos *Board) error {
 	startTime := time.Now()
 	err := pos.Check()
 	if err != nil {
@@ -39,7 +39,7 @@ func PerftTest(depth int, pos *SBoard) error {
 	fmt.Printf("Starting test to depth %d \n", depth)
 
 	leafNodes = 0
-	var list SMoveList
+	var list MoveList
 	list.GenerateAllMoves(pos)
 	for i := 0; i < list.count; i++ {
 		move := list.moves[i].move

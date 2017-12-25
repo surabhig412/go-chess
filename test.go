@@ -62,7 +62,7 @@ func Test() {
 
 	fmt.Println("\nTesting Parsing of FEN notation: ")
 
-	var board SBoard
+	var board Board
 
 	// Position of pieces
 	fmt.Println("\nInitial board structure: rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
@@ -292,7 +292,7 @@ func Test() {
 	}
 	(&board).Print()
 
-	var movelist SMoveList
+	var movelist MoveList
 	(&movelist).GenerateAllMoves(&board)
 	(&movelist).Print()
 
@@ -454,7 +454,7 @@ func Test() {
 	re := regexp.MustCompile("[0-9]+")
 	for scanner.Scan() {
 		testArr := strings.Split(scanner.Text(), ";")
-		var board1 SBoard
+		var board1 Board
 		fmt.Println("Fen: ", testArr[0])
 		err = ParseFEN(testArr[0], &board1)
 		if err != nil {
@@ -470,7 +470,7 @@ func Test() {
 	}
 }
 
-func printSqAttacked(side int, pos SBoard) {
+func printSqAttacked(side int, pos Board) {
 	for rank := Rank8; rank >= Rank1; rank-- {
 		for file := FileA; file <= FileH; file++ {
 			sq := FR2SQ(file, rank)
