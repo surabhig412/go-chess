@@ -66,6 +66,61 @@ var PieceDir = [13][8]int{
 	{-1, -10, 1, 10, -9, -11, 11, 9},
 }
 
+// PawnTable gives the material score of pawn on respective squares on the board
+var PawnTable = [64]int{
+	0, 0, 0, 0, 0, 0, 0, 0,
+	10, 10, 0, -10, -10, 0, 10, 10,
+	5, 0, 0, 5, 5, 0, 0, 5,
+	0, 0, 10, 20, 20, 10, 0, 0,
+	5, 5, 5, 10, 10, 5, 5, 5,
+	10, 10, 10, 20, 20, 10, 10, 10,
+	20, 20, 20, 30, 30, 20, 20, 20,
+	0, 0, 0, 0, 0, 0, 0, 0}
+
+// KnightTable gives the material score of knight on respective squares on the board
+var KnightTable = [64]int{
+	0, -10, 0, 0, 0, 0, -10, 0,
+	0, 0, 0, 5, 5, 0, 0, 0,
+	0, 0, 10, 10, 10, 10, 0, 0,
+	0, 0, 10, 20, 20, 10, 5, 0,
+	5, 10, 15, 20, 20, 15, 10, 5,
+	5, 10, 10, 20, 20, 10, 10, 5,
+	0, 0, 5, 10, 10, 5, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0}
+
+// BishopTable gives the material score of bishop on respective squares on the board
+var BishopTable = [64]int{
+	0, 0, -10, 0, 0, -10, 0, 0,
+	0, 0, 0, 10, 10, 0, 0, 0,
+	0, 0, 10, 15, 15, 10, 0, 0,
+	0, 10, 15, 20, 20, 15, 10, 0,
+	0, 10, 15, 20, 20, 15, 10, 0,
+	0, 0, 10, 15, 15, 10, 0, 0,
+	0, 0, 0, 10, 10, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0}
+
+// RookTable gives the material score of rook on respective squares on the board
+var RookTable = [64]int{
+	0, 0, 5, 10, 10, 5, 0, 0,
+	0, 0, 5, 10, 10, 5, 0, 0,
+	0, 0, 5, 10, 10, 5, 0, 0,
+	0, 0, 5, 10, 10, 5, 0, 0,
+	0, 0, 5, 10, 10, 5, 0, 0,
+	0, 0, 5, 10, 10, 5, 0, 0,
+	25, 25, 25, 25, 25, 25, 25, 25,
+	0, 0, 5, 10, 10, 5, 0, 0}
+
+// Mirror64 gives repective square for the black side
+var Mirror64 = [64]int{
+	56, 57, 58, 59, 60, 61, 62, 63,
+	48, 49, 50, 51, 52, 53, 54, 55,
+	40, 41, 42, 43, 44, 45, 46, 47,
+	32, 33, 34, 35, 36, 37, 38, 39,
+	24, 25, 26, 27, 28, 29, 30, 31,
+	16, 17, 18, 19, 20, 21, 22, 23,
+	8, 9, 10, 11, 12, 13, 14, 15,
+	0, 1, 2, 3, 4, 5, 6, 7}
+
 // NumDir specifies number of directions in which a piece can move
 var NumDir = [13]int{0, 0, 8, 4, 4, 8, 8, 0, 8, 4, 4, 8, 8}
 

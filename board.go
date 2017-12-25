@@ -7,25 +7,27 @@ import (
 
 // Board is board structure
 type Board struct {
-	Pieces     [BrdSqNum]int //all pieces on 120 board
-	Pawns      [3]uint64     // 64 bit structure of white, black and both pawns
-	KingSq     [2]int        // Positions of white, black and both kings
-	Side       int           // White or black side playing
-	EnPas      int           // enPas rule
-	FiftyMove  int           // Number of move according to the fifty rule
-	CastlePerm int           // castling Permission
-	Ply        int           // Number of half moves played
-	HisPly     int           // History of ply- highest number of moves played in game
-	PosKey     uint64        // value of hashing piece, side, enPas and castle values
-	PceNum     [13]int       // Total number of respective pieces on the board
-	BigPce     [2]int        // index 0 represents number of big pieces(anything other than pawn) on white side and index 1 of black side
-	MajPce     [2]int        // index 0 represents number of major pieces(rooks and queen) on white side and index 1 of black side
-	MinPce     [2]int        // index 0 represents number of minor pieces(bishop and knight) on white side and index 1 of black side
-	Material   [2]int        // index 0 represents total value of all pieces on white side and index 1 of black side
-	History    [MaxGameMoves]Undo
-	PList      [13][10]int //piece list(10(maxm number of pieces of a particular piece) - there can be atmost 10 rooks on the board at a time)
-	PvTable    PvTable     // principal variation table contains all important moves of the game
-	PvArray    [MaxDepth]int
+	Pieces        [BrdSqNum]int //all pieces on 120 board
+	Pawns         [3]uint64     // 64 bit structure of white, black and both pawns
+	KingSq        [2]int        // Positions of white, black and both kings
+	Side          int           // White or black side playing
+	EnPas         int           // enPas rule
+	FiftyMove     int           // Number of move according to the fifty rule
+	CastlePerm    int           // castling Permission
+	Ply           int           // Number of half moves played in the current search
+	HisPly        int           // History of ply- number of half moves played in entire game
+	PosKey        uint64        // value of hashing piece, side, enPas and castle values
+	PceNum        [13]int       // Total number of respective pieces on the board
+	BigPce        [2]int        // index 0 represents number of big pieces(anything other than pawn) on white side and index 1 of black side
+	MajPce        [2]int        // index 0 represents number of major pieces(rooks and queen) on white side and index 1 of black side
+	MinPce        [2]int        // index 0 represents number of minor pieces(bishop and knight) on white side and index 1 of black side
+	Material      [2]int        // index 0 represents total value of all pieces on white side and index 1 of black side
+	History       [MaxGameMoves]Undo
+	PList         [13][10]int //piece list(10(maxm number of pieces of a particular piece) - there can be atmost 10 rooks on the board at a time)
+	PvTable       PvTable     // principal variation table contains all important moves of the game
+	PvArray       [MaxDepth]int
+	SearchHistory [13][BrdSqNum]int // stores the pieces which crossed alpha cutoff
+	SearchKillers [2][MaxDepth]int  // stores two moves in each depth which crosses beta cutoff
 }
 
 // Print prints the entire chess board
