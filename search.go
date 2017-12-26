@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"time"
 )
 
@@ -37,8 +38,8 @@ func isRepetition(pos *Board) bool {
 	return false
 }
 
-// ClearForSearch clears the board before searching
-func (si *SearchInfo) ClearForSearch(pos *Board) {
+// ClearForSearch clears the board and searchInfo before searching
+func ClearForSearch(pos *Board, si *SearchInfo) {
 	for i := 0; i < 13; i++ {
 		for j := 0; j < BrdSqNum; j++ {
 			pos.SearchHistory[i][j] = 0
@@ -57,14 +58,83 @@ func (si *SearchInfo) ClearForSearch(pos *Board) {
 }
 
 // Quiescence search does alpha beta considering all the quiet moves. It covers horizon effects on the chess board
-func (si *SearchInfo) Quiescence(alpha, beta int, pos *Board) int {
+func Quiescence(alpha, beta int, si *SearchInfo, pos *Board) int {
 	return 0
 }
 
-func (si *SearchInfo) AlphaBeta(alpha, beta, depth int, pos *Board, doNull bool) int {
-	return 0
+func AlphaBeta(alpha, beta, depth int, si *SearchInfo, pos *Board, doNull bool) int {
+	err := pos.Check()
+	if err != nil {
+		log.Fatalln("Invalid board position")
+		return 0
+	}
+	if depth == 0 {
+		si.nodes++
+		score, _ := EvalPosition(pos)
+		return score
+	}
+	si.nodes++
+	// draw condition
+	if isRepetition(pos) || pos.FiftyMove >= 100 {
+		return 0
+	}
+	// when depth has exceeded maxdepth
+	if pos.Ply > MaxDepth-1 {
+		score, _ := EvalPosition(pos)
+		return score
+	}
+	var list MoveList
+	list.GenerateAllMoves(pos)
+	legalMovesCount := 0 // if no legal moves then it is condition of check mate or stale mate
+	oldAlpha := alpha
+	bestMove := NoMove
+	score := -Infinite
+	for i := 0; i < list.count; i++ {
+		moveMade, _ := MakeMove(list.moves[i].move, pos)
+		if !moveMade {
+			continue
+		}
+		legalMovesCount++
+		score = -AlphaBeta(-beta, -alpha, depth-1, si, pos, doNull)
+		TakeMove(pos)
+		if score > alpha {
+			if score >= beta {
+				return beta
+			}
+			alpha = score
+			bestMove = list.moves[i].move
+		}
+	}
+	if legalMovesCount == 0 {
+		if attacked, _ := SqAttacked(pos.KingSq[pos.Side], pos.Side^1, pos); attacked {
+			return -Infinite + pos.Ply
+		} else {
+			return 0
+		}
+	}
+	if alpha != oldAlpha {
+		StorePvMove(pos, bestMove)
+	}
+	return alpha
 }
 
-func (si *SearchInfo) SearchPosition(pos *Board) {
-
+func SearchPosition(pos *Board, si *SearchInfo) {
+	bestMove := NoMove
+	bestScore := -Infinite
+	currentDepth := 0
+	ClearForSearch(pos, si)
+	// iterative deepening
+	for currentDepth = 1; currentDepth <= si.depth; currentDepth++ {
+		bestScore = AlphaBeta(-Infinite, Infinite, currentDepth, si, pos, true)
+		// out of time check to be included
+		pvMoves, _ := GetPvLine(currentDepth, pos)
+		bestMove = pos.PvArray[0]
+		fmt.Printf("Depth:%d, score: %d, move: %s, nodes: %v\n", currentDepth, bestScore, PrintMove(bestMove), si.nodes)
+		pvMoves, _ = GetPvLine(currentDepth, pos)
+		fmt.Printf("pv")
+		for i := 0; i < pvMoves; i++ {
+			fmt.Printf(" %s", PrintMove(pos.PvArray[i]))
+		}
+		fmt.Println()
+	}
 }
