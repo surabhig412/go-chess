@@ -10,6 +10,7 @@ const (
 	PvSize           = 0x100000 * 2
 	MaxDepth         = 64
 	Infinite         = 30000
+	Mate             = 29000
 )
 
 // Possible values for various fields

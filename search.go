@@ -17,6 +17,8 @@ type SearchInfo struct {
 	nodes     uint64
 	quit      bool
 	stopped   bool
+	fh        float32 //fail high
+	fhf       float32 // fail high first
 }
 
 // checkUp checks if time is up or there is an interrupt from GUI
@@ -55,6 +57,8 @@ func ClearForSearch(pos *Board, si *SearchInfo) {
 	si.startTime = time.Now()
 	si.stopTime = time.Time{}
 	si.nodes = 0
+	si.fh = 0
+	si.fhf = 0
 }
 
 // Quiescence search does alpha beta considering all the quiet moves. It covers horizon effects on the chess board
@@ -99,6 +103,10 @@ func AlphaBeta(alpha, beta, depth int, si *SearchInfo, pos *Board, doNull bool) 
 		TakeMove(pos)
 		if score > alpha {
 			if score >= beta {
+				if legalMovesCount == 1 {
+					si.fhf++
+				}
+				si.fh++
 				return beta
 			}
 			alpha = score
@@ -107,7 +115,7 @@ func AlphaBeta(alpha, beta, depth int, si *SearchInfo, pos *Board, doNull bool) 
 	}
 	if legalMovesCount == 0 {
 		if attacked, _ := SqAttacked(pos.KingSq[pos.Side], pos.Side^1, pos); attacked {
-			return -Infinite + pos.Ply
+			return -Mate + pos.Ply
 		} else {
 			return 0
 		}
@@ -129,12 +137,11 @@ func SearchPosition(pos *Board, si *SearchInfo) {
 		// out of time check to be included
 		pvMoves, _ := GetPvLine(currentDepth, pos)
 		bestMove = pos.PvArray[0]
-		fmt.Printf("Depth:%d, score: %d, move: %s, nodes: %v\n", currentDepth, bestScore, PrintMove(bestMove), si.nodes)
-		pvMoves, _ = GetPvLine(currentDepth, pos)
-		fmt.Printf("pv")
+		fmt.Printf("Depth:%d, score: %d, move: %s, nodes: %v pv", currentDepth, bestScore, PrintMove(bestMove), si.nodes)
 		for i := 0; i < pvMoves; i++ {
 			fmt.Printf(" %s", PrintMove(pos.PvArray[i]))
 		}
 		fmt.Println()
+		fmt.Println("Ordering: ", si.fhf/si.fh)
 	}
 }

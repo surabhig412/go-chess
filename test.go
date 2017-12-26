@@ -468,6 +468,19 @@ func Test() {
 			fmt.Println("Expected result: ", testConditionArr[1])
 		}
 	}
+
+	fmt.Println("Checking if program searches for mate in 3 position")
+	mateIn3FEN := "2rr3k/pp3pp1/1nnqbN1p/3pN3/2pP4/2P3Q1/PPB4P/R4RK1 w - -"
+	var board2 Board
+	var info SearchInfo
+	err = ParseFEN(mateIn3FEN, &board2)
+	if err != nil {
+		fmt.Println("Error in parsing fen: ", err)
+	}
+	board2.Print()
+	(&board2).PvTable.Init()
+	info.depth = 4
+	SearchPosition(&board2, &info)
 }
 
 func printSqAttacked(side int, pos Board) {

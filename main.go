@@ -13,6 +13,7 @@ func main() {
 	// Test()
 	fmt.Println("Let us play chess!")
 	var board Board
+	var info SearchInfo
 	err := ParseFEN(StartFEN, &board)
 	if err != nil {
 		fmt.Println("Error in parsing fen: ", err)
@@ -47,6 +48,9 @@ func main() {
 				fmt.Println(PrintMove(move))
 			}
 			fmt.Printf("Please enter a move > ")
+		case "s":
+			info.depth = 4
+			SearchPosition(&board, &info)
 		default:
 			move, err := ParseMove(strings.ToLower(command), &board)
 			if err != nil {
