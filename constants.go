@@ -21,6 +21,12 @@ const (
 	FileChar = "abcdefgh"
 )
 
+// MvvLvaScores stores victim-attacker score
+var MvvLvaScores [13][13]int
+
+// Score if a piece is a victim
+var VictimScore = [13]int{0, 100, 200, 300, 400, 500, 600, 100, 200, 300, 400, 500, 600}
+
 // PieceBig shows whether respective piece of chess is big or not(except pawns all big)
 var PieceBig = [13]int{False, False, True, True, True, True, True, False, True, True, True, True, True}
 

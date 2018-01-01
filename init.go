@@ -76,6 +76,15 @@ func initCastlePermission() {
 	CastlePerm[H8] = 11 // disables Bkca
 }
 
+// initMvvLva initializes the score of each piece according to most valuable victim and least valuable attacker
+func initMvvLva() {
+	for attacker := Wp; attacker <= Bk; attacker++ {
+		for victim := Wp; victim <= Bk; victim++ {
+			MvvLvaScores[victim][attacker] = VictimScore[victim] + 6 - (VictimScore[attacker] / 100)
+		}
+	}
+}
+
 // AllInit is used to initialize arrays, masks and keys of the board
 func AllInit() {
 	initSq120To64()
@@ -83,4 +92,5 @@ func AllInit() {
 	initHashKeys()
 	initFilesRankBrd()
 	initCastlePermission()
+	initMvvLva()
 }

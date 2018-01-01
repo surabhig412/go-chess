@@ -64,14 +64,14 @@ func (list *MoveList) addQuietMove(pos *Board, move int) {
 // addCaptureMove to move list
 func (list *MoveList) addCaptureMove(pos *Board, move int) {
 	list.moves[list.count].move = move
-	list.moves[list.count].score = 0
+	list.moves[list.count].score = MvvLvaScores[Captured(move)][pos.Pieces[FromSq(move)]]
 	list.count++
 }
 
 // addEnPassantMove to move list
 func (list *MoveList) addEnPassantMove(pos *Board, move int) {
 	list.moves[list.count].move = move
-	list.moves[list.count].score = 0
+	list.moves[list.count].score = 105
 	list.count++
 }
 
