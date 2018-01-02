@@ -22,6 +22,7 @@ const (
 )
 
 var Debug bool
+var OnlyCapturedMoves = false
 
 // MvvLvaScores stores victim-attacker score
 var MvvLvaScores [13][13]int

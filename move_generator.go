@@ -190,15 +190,18 @@ func (list *MoveList) GenerateAllMoves(pos *Board) error {
 			if !SqOnBoard(sq) {
 				return errors.New("Square is not on board")
 			}
-			if pos.Pieces[sq+10] == Empty {
-				err = list.addPawnMove(pos, sq, sq+10, White)
-				if err != nil {
-					return err
-				}
-				if RanksBrd[sq] == Rank2 && pos.Pieces[sq+20] == Empty {
-					list.addQuietMove(pos, Move(sq, sq+20, Empty, Empty, MFlagPS))
+			if !OnlyCapturedMoves {
+				if pos.Pieces[sq+10] == Empty {
+					err = list.addPawnMove(pos, sq, sq+10, White)
+					if err != nil {
+						return err
+					}
+					if RanksBrd[sq] == Rank2 && pos.Pieces[sq+20] == Empty {
+						list.addQuietMove(pos, Move(sq, sq+20, Empty, Empty, MFlagPS))
+					}
 				}
 			}
+
 			if SqOnBoard(sq+9) && PieceCol[pos.Pieces[sq+9]] == Black {
 				err = list.addPawnCaptureMove(pos, sq, sq+9, pos.Pieces[sq+9], White)
 				if err != nil {
@@ -220,23 +223,23 @@ func (list *MoveList) GenerateAllMoves(pos *Board) error {
 		}
 
 		// Castling
-
-		if (pos.CastlePerm & Wkca) > 0 {
-			if pos.Pieces[F1] == Empty && pos.Pieces[G1] == Empty {
-				resE1, _ := SqAttacked(E1, Black, pos)
-				resF1, _ := SqAttacked(F1, Black, pos)
-				if !resE1 && !resF1 {
-					list.addQuietMove(pos, Move(E1, G1, Empty, Empty, MFlagCA))
+		if !OnlyCapturedMoves {
+			if (pos.CastlePerm & Wkca) > 0 {
+				if pos.Pieces[F1] == Empty && pos.Pieces[G1] == Empty {
+					resE1, _ := SqAttacked(E1, Black, pos)
+					resF1, _ := SqAttacked(F1, Black, pos)
+					if !resE1 && !resF1 {
+						list.addQuietMove(pos, Move(E1, G1, Empty, Empty, MFlagCA))
+					}
 				}
 			}
-		}
-
-		if (pos.CastlePerm & Wqca) > 0 {
-			if pos.Pieces[D1] == Empty && pos.Pieces[C1] == Empty && pos.Pieces[B1] == Empty {
-				resE1, _ := SqAttacked(E1, Black, pos)
-				resD1, _ := SqAttacked(D1, Black, pos)
-				if !resE1 && !resD1 {
-					list.addQuietMove(pos, Move(E1, C1, Empty, Empty, MFlagCA))
+			if (pos.CastlePerm & Wqca) > 0 {
+				if pos.Pieces[D1] == Empty && pos.Pieces[C1] == Empty && pos.Pieces[B1] == Empty {
+					resE1, _ := SqAttacked(E1, Black, pos)
+					resD1, _ := SqAttacked(D1, Black, pos)
+					if !resE1 && !resD1 {
+						list.addQuietMove(pos, Move(E1, C1, Empty, Empty, MFlagCA))
+					}
 				}
 			}
 		}
@@ -248,13 +251,15 @@ func (list *MoveList) GenerateAllMoves(pos *Board) error {
 			if !SqOnBoard(sq) {
 				return errors.New("Square is not on board")
 			}
-			if pos.Pieces[sq-10] == Empty {
-				err = list.addPawnMove(pos, sq, sq-10, Black)
-				if err != nil {
-					return err
-				}
-				if RanksBrd[sq] == Rank7 && pos.Pieces[sq-20] == Empty {
-					list.addQuietMove(pos, Move(sq, sq-20, Empty, Empty, MFlagPS))
+			if !OnlyCapturedMoves {
+				if pos.Pieces[sq-10] == Empty {
+					err = list.addPawnMove(pos, sq, sq-10, Black)
+					if err != nil {
+						return err
+					}
+					if RanksBrd[sq] == Rank7 && pos.Pieces[sq-20] == Empty {
+						list.addQuietMove(pos, Move(sq, sq-20, Empty, Empty, MFlagPS))
+					}
 				}
 			}
 			if SqOnBoard(sq-9) && PieceCol[pos.Pieces[sq-9]] == White {
@@ -278,22 +283,24 @@ func (list *MoveList) GenerateAllMoves(pos *Board) error {
 		}
 
 		// Castling
-		if (pos.CastlePerm & Bkca) > 0 {
-			if pos.Pieces[F8] == Empty && pos.Pieces[G8] == Empty {
-				resE8, _ := SqAttacked(E8, White, pos)
-				resF8, _ := SqAttacked(F8, White, pos)
-				if !resE8 && !resF8 {
-					list.addQuietMove(pos, Move(E8, G8, Empty, Empty, MFlagCA))
+		if !OnlyCapturedMoves {
+			if (pos.CastlePerm & Bkca) > 0 {
+				if pos.Pieces[F8] == Empty && pos.Pieces[G8] == Empty {
+					resE8, _ := SqAttacked(E8, White, pos)
+					resF8, _ := SqAttacked(F8, White, pos)
+					if !resE8 && !resF8 {
+						list.addQuietMove(pos, Move(E8, G8, Empty, Empty, MFlagCA))
+					}
 				}
 			}
-		}
 
-		if (pos.CastlePerm & Bqca) > 0 {
-			if pos.Pieces[D8] == Empty && pos.Pieces[C8] == Empty && pos.Pieces[B8] == Empty {
-				resE8, _ := SqAttacked(E8, White, pos)
-				resD8, _ := SqAttacked(D8, White, pos)
-				if !resE8 && !resD8 {
-					list.addQuietMove(pos, Move(E8, C8, Empty, Empty, MFlagCA))
+			if (pos.CastlePerm & Bqca) > 0 {
+				if pos.Pieces[D8] == Empty && pos.Pieces[C8] == Empty && pos.Pieces[B8] == Empty {
+					resE8, _ := SqAttacked(E8, White, pos)
+					resD8, _ := SqAttacked(D8, White, pos)
+					if !resE8 && !resD8 {
+						list.addQuietMove(pos, Move(E8, C8, Empty, Empty, MFlagCA))
+					}
 				}
 			}
 		}
@@ -324,7 +331,9 @@ func (list *MoveList) GenerateAllMoves(pos *Board) error {
 						}
 						break
 					}
-					list.addQuietMove(pos, Move(sq, checkSq, Empty, Empty, 0))
+					if !OnlyCapturedMoves {
+						list.addQuietMove(pos, Move(sq, checkSq, Empty, Empty, 0))
+					}
 					checkSq += direction
 				}
 			}
@@ -359,7 +368,9 @@ func (list *MoveList) GenerateAllMoves(pos *Board) error {
 					}
 					continue
 				}
-				list.addQuietMove(pos, Move(sq, checkSq, Empty, Empty, 0))
+				if !OnlyCapturedMoves {
+					list.addQuietMove(pos, Move(sq, checkSq, Empty, Empty, 0))
+				}
 			}
 		}
 		pieceIndex++

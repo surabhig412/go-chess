@@ -63,7 +63,59 @@ func ClearForSearch(pos *Board, si *SearchInfo) {
 
 // Quiescence search does alpha beta considering all the quiet moves. It covers horizon effects on the chess board
 func Quiescence(alpha, beta int, si *SearchInfo, pos *Board) int {
-	return 0
+	err := pos.Check()
+	if err != nil {
+		log.Fatalln("Error occurred in Quiescence")
+	}
+	si.nodes++
+	if isRepetition(pos) || pos.FiftyMove >= 100 {
+		return 0
+	}
+	if pos.Ply > MaxDepth-1 {
+		score, _ := EvalPosition(pos)
+		return score
+	}
+	score, _ := EvalPosition(pos)
+	if score >= beta {
+		return beta
+	}
+	if score > alpha {
+		alpha = score
+	}
+	var list MoveList
+	OnlyCapturedMoves = true
+	list.GenerateAllMoves(pos)
+	legalMovesCount := 0
+	oldAlpha := alpha
+	bestMove := NoMove
+	score = -Infinite
+
+	for i := 0; i < list.count; i++ {
+		list.PickNextMove(i)
+		moveMade, _ := MakeMove(list.moves[i].move, pos)
+		if !moveMade {
+			continue
+		}
+		legalMovesCount++
+		score = -Quiescence(-beta, -alpha, si, pos)
+		TakeMove(pos)
+		if score > alpha {
+			if score >= beta {
+				if legalMovesCount == 1 {
+					si.fhf++
+				}
+				si.fh++
+				return beta
+			}
+			alpha = score
+			bestMove = list.moves[i].move
+		}
+	}
+
+	if alpha != oldAlpha {
+		StorePvMove(pos, bestMove)
+	}
+	return alpha
 }
 
 func AlphaBeta(alpha, beta, depth int, si *SearchInfo, pos *Board, doNull bool) int {
@@ -73,9 +125,7 @@ func AlphaBeta(alpha, beta, depth int, si *SearchInfo, pos *Board, doNull bool) 
 		return 0
 	}
 	if depth == 0 {
-		si.nodes++
-		score, _ := EvalPosition(pos)
-		return score
+		return Quiescence(alpha, beta, si, pos)
 	}
 	si.nodes++
 	// draw condition
@@ -154,11 +204,13 @@ func SearchPosition(pos *Board, si *SearchInfo) {
 		// out of time check to be included
 		pvMoves, _ := GetPvLine(currentDepth, pos)
 		bestMove = pos.PvArray[0]
-		fmt.Printf("Depth:%d, score: %d, move: %s, nodes: %v pv", currentDepth, bestScore, PrintMove(bestMove), si.nodes)
-		for i := 0; i < pvMoves; i++ {
-			fmt.Printf(" %s", PrintMove(pos.PvArray[i]))
+		if bestMove != NoMove {
+			fmt.Printf("Depth:%d, score: %d, move: %s, nodes: %v pv", currentDepth, bestScore, PrintMove(bestMove), si.nodes)
+			for i := 0; i < pvMoves; i++ {
+				fmt.Printf(" %s", PrintMove(pos.PvArray[i]))
+			}
+			fmt.Println()
+			fmt.Println("Ordering: ", si.fhf/si.fh)
 		}
-		fmt.Println()
-		fmt.Println("Ordering: ", si.fhf/si.fh)
 	}
 }
