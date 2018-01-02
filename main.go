@@ -2,13 +2,18 @@ package main
 
 import (
 	"bufio"
+	"flag"
 	"fmt"
 	"os"
 	"strings"
 )
 
+var debug = flag.Bool("debug", false, "To switch on debugging")
+
 func main() {
 	fmt.Println()
+	flag.Parse()
+	Debug = *debug
 	AllInit()
 	// Test()
 	fmt.Println("Let us play chess!")
@@ -49,7 +54,7 @@ func main() {
 			}
 			fmt.Printf("Please enter a move > ")
 		case "s":
-			info.depth = 4
+			info.depth = 6
 			SearchPosition(&board, &info)
 		default:
 			move, err := ParseMove(strings.ToLower(command), &board)

@@ -160,6 +160,9 @@ func (pos *Board) UpdateListsMaterial() {
 
 // Check cross-checks if all pieces are placed properly
 func (pos *Board) Check() error {
+	if !Debug {
+		return nil
+	}
 	var tempPceNumArr = [13]int{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
 	var tempBigPceArr = [2]int{0, 0}
 	var tempMajPceArr = [2]int{0, 0}

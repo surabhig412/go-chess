@@ -93,7 +93,17 @@ func AlphaBeta(alpha, beta, depth int, si *SearchInfo, pos *Board, doNull bool) 
 	oldAlpha := alpha
 	bestMove := NoMove
 	score := -Infinite
+	pvMove, _ := ProbePvTable(pos)
+	if pvMove != NoMove {
+		for i := 0; i < list.count; i++ {
+			if list.moves[i].move == pvMove {
+				list.moves[i].score = 2000000
+				break
+			}
+		}
+	}
 	for i := 0; i < list.count; i++ {
+		list.PickNextMove(i)
 		moveMade, _ := MakeMove(list.moves[i].move, pos)
 		if !moveMade {
 			continue
@@ -107,10 +117,17 @@ func AlphaBeta(alpha, beta, depth int, si *SearchInfo, pos *Board, doNull bool) 
 					si.fhf++
 				}
 				si.fh++
+				if (list.moves[i].move & MFlagCAP) == 0 {
+					pos.SearchKillers[1][pos.Ply] = pos.SearchKillers[0][pos.Ply]
+					pos.SearchKillers[0][pos.Ply] = list.moves[i].move
+				}
 				return beta
 			}
 			alpha = score
 			bestMove = list.moves[i].move
+			if (list.moves[i].move & MFlagCAP) == 0 {
+				pos.SearchHistory[pos.Pieces[FromSq(bestMove)]][ToSq(bestMove)] += depth
+			}
 		}
 	}
 	if legalMovesCount == 0 {

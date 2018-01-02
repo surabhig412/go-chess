@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
+	"log"
 )
 
 /* Game Move
@@ -37,6 +38,22 @@ func (list *MoveList) Print() {
 	fmt.Printf("MoveList Total %d moves:\n", list.count)
 }
 
+// PickNextMove returns list with best moves
+func (list *MoveList) PickNextMove(moveNum int) {
+	bestScore := 0
+	bestNum := moveNum
+	var temp MoveEntity
+	for index := moveNum; index < list.count; index++ {
+		if list.moves[index].score > bestScore {
+			bestScore = list.moves[index].score
+			bestNum = index
+		}
+	}
+	temp = list.moves[moveNum]
+	list.moves[moveNum] = list.moves[bestNum]
+	list.moves[bestNum] = temp
+}
+
 // MoveExists checks if move is a valid move on the current state of the board
 func MoveExists(pos *Board, move int) bool {
 	var list MoveList
@@ -56,22 +73,42 @@ func MoveExists(pos *Board, move int) bool {
 
 // addQuietMove to move list
 func (list *MoveList) addQuietMove(pos *Board, move int) {
+	if !SqOnBoard(FromSq(move)) {
+		log.Fatalf("From sq of move %d not on board", move)
+	}
+	if !SqOnBoard(ToSq(move)) {
+		log.Fatalf("To sq of move %d not on board", move)
+	}
 	list.moves[list.count].move = move
-	list.moves[list.count].score = 0
+	if pos.SearchKillers[0][pos.Ply] == move {
+		list.moves[list.count].score = 900000
+	} else if pos.SearchKillers[0][pos.Ply] == move {
+		list.moves[list.count].score = 800000
+	} else {
+		list.moves[list.count].score = pos.SearchHistory[pos.Pieces[FromSq(move)]][ToSq(move)]
+	}
+
 	list.count++
 }
 
 // addCaptureMove to move list
 func (list *MoveList) addCaptureMove(pos *Board, move int) {
+	if !SqOnBoard(FromSq(move)) {
+		log.Fatalf("From sq of move %d not on board", move)
+	}
+	if !SqOnBoard(ToSq(move)) {
+		log.Fatalf("To sq of move %d not on board", move)
+	}
+
 	list.moves[list.count].move = move
-	list.moves[list.count].score = MvvLvaScores[Captured(move)][pos.Pieces[FromSq(move)]]
+	list.moves[list.count].score = MvvLvaScores[Captured(move)][pos.Pieces[FromSq(move)]] + 1000000
 	list.count++
 }
 
 // addEnPassantMove to move list
 func (list *MoveList) addEnPassantMove(pos *Board, move int) {
 	list.moves[list.count].move = move
-	list.moves[list.count].score = 105
+	list.moves[list.count].score = 105 + 1000000
 	list.count++
 }
 
@@ -175,10 +212,10 @@ func (list *MoveList) GenerateAllMoves(pos *Board) error {
 				}
 			}
 			if sq+9 == pos.EnPas {
-				list.addCaptureMove(pos, Move(sq, sq+9, Empty, Empty, MFlagEP))
+				list.addEnPassantMove(pos, Move(sq, sq+9, Empty, Empty, MFlagEP))
 			}
 			if sq+11 == pos.EnPas {
-				list.addCaptureMove(pos, Move(sq, sq+11, Empty, Empty, MFlagEP))
+				list.addEnPassantMove(pos, Move(sq, sq+11, Empty, Empty, MFlagEP))
 			}
 		}
 
@@ -233,10 +270,10 @@ func (list *MoveList) GenerateAllMoves(pos *Board) error {
 				}
 			}
 			if sq-9 == pos.EnPas {
-				list.addCaptureMove(pos, Move(sq, sq-9, Empty, Empty, MFlagEP))
+				list.addEnPassantMove(pos, Move(sq, sq-9, Empty, Empty, MFlagEP))
 			}
 			if sq-11 == pos.EnPas {
-				list.addCaptureMove(pos, Move(sq, sq-11, Empty, Empty, MFlagEP))
+				list.addEnPassantMove(pos, Move(sq, sq-11, Empty, Empty, MFlagEP))
 			}
 		}
 
