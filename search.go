@@ -41,7 +41,7 @@ func isRepetition(pos *Board) bool {
 }
 
 // ClearForSearch clears the board and searchInfo before searching
-func ClearForSearch(pos *Board, si *SearchInfo) {
+func ClearForSearch(pos *Board, info *SearchInfo) {
 	for i := 0; i < 13; i++ {
 		for j := 0; j < BrdSqNum; j++ {
 			pos.SearchHistory[i][j] = 0
@@ -54,20 +54,20 @@ func ClearForSearch(pos *Board, si *SearchInfo) {
 	}
 	pos.PvTable.Clear()
 	pos.Ply = 0
-	si.startTime = time.Now()
-	si.stopTime = time.Time{}
-	si.nodes = 0
-	si.fh = 0
-	si.fhf = 0
+	info.startTime = time.Now()
+	info.stopTime = time.Time{}
+	info.nodes = 0
+	info.fh = 0
+	info.fhf = 0
 }
 
 // Quiescence search does alpha beta considering all the quiet moves. It covers horizon effects on the chess board
-func Quiescence(alpha, beta int, si *SearchInfo, pos *Board) int {
+func Quiescence(alpha, beta int, info *SearchInfo, pos *Board) int {
 	err := pos.Check()
 	if err != nil {
 		log.Fatalln("Error occurred in Quiescence")
 	}
-	si.nodes++
+	info.nodes++
 	if isRepetition(pos) || pos.FiftyMove >= 100 {
 		return 0
 	}
@@ -97,14 +97,14 @@ func Quiescence(alpha, beta int, si *SearchInfo, pos *Board) int {
 			continue
 		}
 		legalMovesCount++
-		score = -Quiescence(-beta, -alpha, si, pos)
+		score = -Quiescence(-beta, -alpha, info, pos)
 		TakeMove(pos)
 		if score > alpha {
 			if score >= beta {
 				if legalMovesCount == 1 {
-					si.fhf++
+					info.fhf++
 				}
-				si.fh++
+				info.fh++
 				return beta
 			}
 			alpha = score
@@ -118,16 +118,16 @@ func Quiescence(alpha, beta int, si *SearchInfo, pos *Board) int {
 	return alpha
 }
 
-func AlphaBeta(alpha, beta, depth int, si *SearchInfo, pos *Board, doNull bool) int {
+func AlphaBeta(alpha, beta, depth int, info *SearchInfo, pos *Board, doNull bool) int {
 	err := pos.Check()
 	if err != nil {
 		log.Fatalln("Invalid board position")
 		return 0
 	}
 	if depth == 0 {
-		return Quiescence(alpha, beta, si, pos)
+		return Quiescence(alpha, beta, info, pos)
 	}
-	si.nodes++
+	info.nodes++
 	// draw condition
 	if isRepetition(pos) || pos.FiftyMove >= 100 {
 		return 0
@@ -159,14 +159,14 @@ func AlphaBeta(alpha, beta, depth int, si *SearchInfo, pos *Board, doNull bool) 
 			continue
 		}
 		legalMovesCount++
-		score = -AlphaBeta(-beta, -alpha, depth-1, si, pos, doNull)
+		score = -AlphaBeta(-beta, -alpha, depth-1, info, pos, doNull)
 		TakeMove(pos)
 		if score > alpha {
 			if score >= beta {
 				if legalMovesCount == 1 {
-					si.fhf++
+					info.fhf++
 				}
-				si.fh++
+				info.fh++
 				if (list.moves[i].move & MFlagCAP) == 0 {
 					pos.SearchKillers[1][pos.Ply] = pos.SearchKillers[0][pos.Ply]
 					pos.SearchKillers[0][pos.Ply] = list.moves[i].move
@@ -193,24 +193,24 @@ func AlphaBeta(alpha, beta, depth int, si *SearchInfo, pos *Board, doNull bool) 
 	return alpha
 }
 
-func SearchPosition(pos *Board, si *SearchInfo) {
+func SearchPosition(pos *Board, info *SearchInfo) {
 	bestMove := NoMove
 	bestScore := -Infinite
 	currentDepth := 0
-	ClearForSearch(pos, si)
+	ClearForSearch(pos, info)
 	// iterative deepening
-	for currentDepth = 1; currentDepth <= si.depth; currentDepth++ {
-		bestScore = AlphaBeta(-Infinite, Infinite, currentDepth, si, pos, true)
+	for currentDepth = 1; currentDepth <= info.depth; currentDepth++ {
+		bestScore = AlphaBeta(-Infinite, Infinite, currentDepth, info, pos, true)
 		// out of time check to be included
 		pvMoves, _ := GetPvLine(currentDepth, pos)
 		bestMove = pos.PvArray[0]
 		if bestMove != NoMove {
-			fmt.Printf("Depth:%d, score: %d, move: %s, nodes: %v pv", currentDepth, bestScore, PrintMove(bestMove), si.nodes)
+			fmt.Printf("Depth:%d, score: %d, move: %s, nodes: %v pv", currentDepth, bestScore, PrintMove(bestMove), info.nodes)
 			for i := 0; i < pvMoves; i++ {
 				fmt.Printf(" %s", PrintMove(pos.PvArray[i]))
 			}
 			fmt.Println()
-			fmt.Println("Ordering: ", si.fhf/si.fh)
+			fmt.Println("Ordering: ", info.fhf/info.fh)
 		}
 	}
 }
