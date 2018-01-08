@@ -11,6 +11,7 @@ const (
 	MaxDepth         = 64
 	Infinite         = 30000
 	Mate             = 29000
+	InputBuffer      = 400 * 6
 )
 
 // Possible values for various fields

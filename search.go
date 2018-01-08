@@ -11,7 +11,7 @@ type SearchInfo struct {
 	stopTime  time.Time
 	depth     int
 	depthSet  int
-	timeSet   time.Time
+	timeSet   bool
 	movesToGo int
 	infinite  bool
 	nodes     uint64
@@ -22,8 +22,10 @@ type SearchInfo struct {
 }
 
 // checkUp checks if time is up or there is an interrupt from GUI
-func checkUp() {
-
+func checkUp(info *SearchInfo) {
+	if info.timeSet && info.stopTime.Before(time.Now()) {
+		info.stopped = true
+	}
 }
 
 // isRepetition checks if current board structure is repetition of some previous board structure
@@ -67,6 +69,7 @@ func Quiescence(alpha, beta int, info *SearchInfo, pos *Board) int {
 	if err != nil {
 		log.Fatalln("Error occurred in Quiescence")
 	}
+	checkUp(info)
 	info.nodes++
 	if isRepetition(pos) || pos.FiftyMove >= 100 {
 		return 0
@@ -99,6 +102,9 @@ func Quiescence(alpha, beta int, info *SearchInfo, pos *Board) int {
 		legalMovesCount++
 		score = -Quiescence(-beta, -alpha, info, pos)
 		TakeMove(pos)
+		if info.stopped == true {
+			return 0
+		}
 		if score > alpha {
 			if score >= beta {
 				if legalMovesCount == 1 {
@@ -127,6 +133,7 @@ func AlphaBeta(alpha, beta, depth int, info *SearchInfo, pos *Board, doNull bool
 	if depth == 0 {
 		return Quiescence(alpha, beta, info, pos)
 	}
+	checkUp(info)
 	info.nodes++
 	// draw condition
 	if isRepetition(pos) || pos.FiftyMove >= 100 {
@@ -161,6 +168,9 @@ func AlphaBeta(alpha, beta, depth int, info *SearchInfo, pos *Board, doNull bool
 		legalMovesCount++
 		score = -AlphaBeta(-beta, -alpha, depth-1, info, pos, doNull)
 		TakeMove(pos)
+		if info.stopped == true {
+			return 0
+		}
 		if score > alpha {
 			if score >= beta {
 				if legalMovesCount == 1 {
@@ -201,11 +211,13 @@ func SearchPosition(pos *Board, info *SearchInfo) {
 	// iterative deepening
 	for currentDepth = 1; currentDepth <= info.depth; currentDepth++ {
 		bestScore = AlphaBeta(-Infinite, Infinite, currentDepth, info, pos, true)
-		// out of time check to be included
+		if info.stopped == true {
+			break
+		}
 		pvMoves, _ := GetPvLine(currentDepth, pos)
 		bestMove = pos.PvArray[0]
 		if bestMove != NoMove {
-			fmt.Printf("Depth:%d, score: %d, move: %s, nodes: %v pv", currentDepth, bestScore, PrintMove(bestMove), info.nodes)
+			fmt.Printf("info score cp %d depth %d, nodes %v time %v pv", bestScore, currentDepth, info.nodes, time.Now().Sub(info.startTime).Seconds()*1000)
 			for i := 0; i < pvMoves; i++ {
 				fmt.Printf(" %s", PrintMove(pos.PvArray[i]))
 			}
@@ -213,4 +225,5 @@ func SearchPosition(pos *Board, info *SearchInfo) {
 			fmt.Println("Ordering: ", info.fhf/info.fh)
 		}
 	}
+	fmt.Printf("bestmove %s\n", PrintMove(bestMove))
 }

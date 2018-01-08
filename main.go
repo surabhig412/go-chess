@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"time"
 )
 
 var debug = flag.Bool("debug", false, "To switch on debugging")
@@ -55,6 +56,9 @@ func main() {
 			fmt.Printf("Please enter a move > ")
 		case "s":
 			info.depth = 6
+			info.startTime = time.Now()
+			duration, _ := time.ParseDuration("200000ms")
+			info.stopTime = time.Now().Add(duration)
 			SearchPosition(&board, &info)
 		default:
 			move, err := ParseMove(strings.ToLower(command), &board)
