@@ -13,6 +13,9 @@ func PrintSq(sq int) string {
 
 // PrintMove prints full move with promoted square(convert move in integer to algebraic format)
 func PrintMove(move int) string {
+	if move == NoMove {
+		return "NoMove"
+	}
 	fileFrom := FilesBrd[FromSq(move)]
 	rankFrom := RanksBrd[FromSq(move)]
 	fileTo := FilesBrd[ToSq(move)]
@@ -50,7 +53,7 @@ func ParseMove(algebraicMove string, pos *Board) (int, error) {
 		return NoMove, errors.New("Square where piece is to be moved is not on board")
 	}
 
-	list.GenerateAllMoves(pos)
+	(&list).GenerateAllMoves(pos)
 	for i := 0; i < list.count; i++ {
 		move := list.moves[i].move
 		if FromSq(move) == fromSq && ToSq(move) == toSq {

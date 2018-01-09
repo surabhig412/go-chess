@@ -57,7 +57,7 @@ func (list *MoveList) PickNextMove(moveNum int) {
 // MoveExists checks if move is a valid move on the current state of the board
 func MoveExists(pos *Board, move int) bool {
 	var list MoveList
-	list.GenerateAllMoves(pos)
+	(&list).GenerateAllMoves(pos)
 	for i := 0; i < list.count; i++ {
 		moveMade, _ := MakeMove(list.moves[i].move, pos)
 		if !moveMade {

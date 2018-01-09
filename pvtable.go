@@ -56,7 +56,6 @@ func GetPvLine(depth int, pos *Board) (int, error) {
 		if err != nil {
 			return 0, err
 		}
-
 	}
 	for pos.Ply > 0 {
 		TakeMove(pos)

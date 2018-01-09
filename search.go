@@ -56,8 +56,6 @@ func ClearForSearch(pos *Board, info *SearchInfo) {
 	}
 	pos.PvTable.Clear()
 	pos.Ply = 0
-	info.startTime = time.Now()
-	info.stopTime = time.Time{}
 	info.nodes = 0
 	info.fh = 0
 	info.fhf = 0
@@ -87,14 +85,15 @@ func Quiescence(alpha, beta int, info *SearchInfo, pos *Board) int {
 	}
 	var list MoveList
 	OnlyCapturedMoves = true
-	list.GenerateAllMoves(pos)
+	(&list).GenerateAllMoves(pos)
+	OnlyCapturedMoves = false
 	legalMovesCount := 0
 	oldAlpha := alpha
 	bestMove := NoMove
 	score = -Infinite
 
 	for i := 0; i < list.count; i++ {
-		list.PickNextMove(i)
+		(&list).PickNextMove(i)
 		moveMade, _ := MakeMove(list.moves[i].move, pos)
 		if !moveMade {
 			continue
@@ -145,7 +144,7 @@ func AlphaBeta(alpha, beta, depth int, info *SearchInfo, pos *Board, doNull bool
 		return score
 	}
 	var list MoveList
-	list.GenerateAllMoves(pos)
+	(&list).GenerateAllMoves(pos)
 	legalMovesCount := 0 // if no legal moves then it is condition of check mate or stale mate
 	oldAlpha := alpha
 	bestMove := NoMove
@@ -160,7 +159,7 @@ func AlphaBeta(alpha, beta, depth int, info *SearchInfo, pos *Board, doNull bool
 		}
 	}
 	for i := 0; i < list.count; i++ {
-		list.PickNextMove(i)
+		(&list).PickNextMove(i)
 		moveMade, _ := MakeMove(list.moves[i].move, pos)
 		if !moveMade {
 			continue
@@ -206,24 +205,21 @@ func AlphaBeta(alpha, beta, depth int, info *SearchInfo, pos *Board, doNull bool
 func SearchPosition(pos *Board, info *SearchInfo) {
 	bestMove := NoMove
 	bestScore := -Infinite
-	currentDepth := 0
 	ClearForSearch(pos, info)
 	// iterative deepening
-	for currentDepth = 1; currentDepth <= info.depth; currentDepth++ {
+	for currentDepth := 1; currentDepth <= info.depth; currentDepth++ {
 		bestScore = AlphaBeta(-Infinite, Infinite, currentDepth, info, pos, true)
 		if info.stopped == true {
 			break
 		}
 		pvMoves, _ := GetPvLine(currentDepth, pos)
 		bestMove = pos.PvArray[0]
-		if bestMove != NoMove {
-			fmt.Printf("info score cp %d depth %d, nodes %v time %v pv", bestScore, currentDepth, info.nodes, time.Now().Sub(info.startTime).Seconds()*1000)
-			for i := 0; i < pvMoves; i++ {
-				fmt.Printf(" %s", PrintMove(pos.PvArray[i]))
-			}
-			fmt.Println()
-			fmt.Println("Ordering: ", info.fhf/info.fh)
+		fmt.Printf("info score cp %d depth %d, nodes %v time %v pv", bestScore, currentDepth, info.nodes, time.Now().Sub(info.startTime).Seconds()*1000)
+		for i := 0; i < pvMoves; i++ {
+			fmt.Printf(" %s", PrintMove(pos.PvArray[i]))
 		}
+		fmt.Println()
+		// fmt.Println("Ordering: ", info.fhf/info.fh)
 	}
 	fmt.Printf("bestmove %s\n", PrintMove(bestMove))
 }

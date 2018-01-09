@@ -17,7 +17,7 @@ func perft(depth int, pos *Board) error {
 		return nil
 	}
 	var list MoveList
-	list.GenerateAllMoves(pos)
+	(&list).GenerateAllMoves(pos)
 	for i := 0; i < list.count; i++ {
 		moveMade, _ := MakeMove(list.moves[i].move, pos)
 		if !moveMade {
@@ -40,7 +40,7 @@ func PerftTest(depth int, pos *Board) error {
 
 	leafNodes = 0
 	var list MoveList
-	list.GenerateAllMoves(pos)
+	(&list).GenerateAllMoves(pos)
 	for i := 0; i < list.count; i++ {
 		move := list.moves[i].move
 		moveMade, _ := MakeMove(move, pos)
