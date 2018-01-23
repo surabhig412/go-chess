@@ -75,6 +75,9 @@ func parsePosition(lineIn string, pos *Board) {
 go depth 6 wtime 180000 btime 100000 binc 1000 winc 1000 movetime 1000 movestogo 40
 */
 func parseGo(line string, info *SearchInfo, pos *Board) {
+	if info.stopped {
+		info.stopped = false
+	}
 	depth := -1
 	movestogo := 30
 	var movetime time.Duration

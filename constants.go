@@ -190,6 +190,12 @@ var FilesBrd [BrdSqNum]int
 // RanksBrd represents the rank to which a square belongs to
 var RanksBrd [BrdSqNum]int
 
+// FileBBMask represents bitwise masks of pieces on all files
+var FileBBMask [8]uint64
+
+// RankBBMask represents bitwise masks of pieces on all ranks
+var RankBBMask [8]uint64
+
 // CastlePerm gives castling permission to each square on the board
 var CastlePerm [BrdSqNum]int
 

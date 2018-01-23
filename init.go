@@ -63,6 +63,16 @@ func initFilesRankBrd() {
 	}
 }
 
+func initEvalMasks() {
+	for rank := Rank8; rank >= Rank1; rank-- {
+		for file := FileA; file <= FileH; file++ {
+			sq := rank*8 + file
+			FileBBMask[file] |= (uint64(1) << uint64(sq))
+			RankBBMask[rank] |= (uint64(1) << uint64(sq))
+		}
+	}
+}
+
 // initCastlePermission initializes CastlePerm array with castling permission values
 func initCastlePermission() {
 	for index := 0; index < BrdSqNum; index++ {
@@ -91,6 +101,7 @@ func AllInit() {
 	initBitMasks()
 	initHashKeys()
 	initFilesRankBrd()
+	initEvalMasks()
 	initCastlePermission()
 	initMvvLva()
 }

@@ -135,13 +135,16 @@ func AlphaBeta(alpha, beta, depth int, info *SearchInfo, pos *Board, doNull bool
 	checkUp(info)
 	info.nodes++
 	// draw condition
-	if isRepetition(pos) || pos.FiftyMove >= 100 {
+	if (isRepetition(pos) || pos.FiftyMove >= 100) && pos.Ply > 0 {
 		return 0
 	}
 	// when depth has exceeded maxdepth
 	if pos.Ply > MaxDepth-1 {
 		score, _ := EvalPosition(pos)
 		return score
+	}
+	if attacked, _ := SqAttacked(pos.KingSq[pos.Side], pos.Side^1, pos); attacked {
+		depth++
 	}
 	var list MoveList
 	(&list).GenerateAllMoves(pos)
